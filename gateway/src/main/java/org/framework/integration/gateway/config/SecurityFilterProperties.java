@@ -1,7 +1,6 @@
 package org.framework.integration.gateway.config;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Component;
@@ -14,8 +13,7 @@ import java.util.List;
  *
  * @author zl
  */
-@Setter
-@Getter
+@Data
 @Component
 @RefreshScope
 @ConfigurationProperties(prefix = "gateway.security.filter")

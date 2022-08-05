@@ -2,9 +2,11 @@ package org.framework.integration.gateway.filter;
 
 import lombok.extern.slf4j.Slf4j;
 import org.framework.integration.gateway.config.SecurityFilterProperties;
-import org.framework.integration.security.core.constants.AuthConstant;
+import org.framework.integration.security.core.constant.AuthConstants;
+import org.framework.integration.security.core.constant.AuthHeaderConstants;
 import org.framework.integration.security.core.entity.AuthInfo;
 import org.framework.integration.security.core.utils.JwtUtil;
+import org.framework.integration.utils.validator.AssertUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.http.HttpMethod;
@@ -17,7 +19,9 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created  on 2022/8/2 11:11:36
@@ -63,11 +67,11 @@ public class AuthFilter extends AbstractFilter {
         }
 
         // 获取token
-        final var authorizationInfo = request.getHeaders().getFirst(AuthConstant.AUTHORIZATION_HEADER);
+        final var authorizationInfo = request.getHeaders().getFirst(AuthConstants.AUTHORIZATION_HEADER);
         if (!StringUtils.hasText(authorizationInfo)) {
             return webFluxResponseWriter(response, MediaType.APPLICATION_JSON_VALUE, HttpStatus.UNAUTHORIZED, "令牌不能为空", 401);
         }
-        if (!StringUtils.startsWithIgnoreCase(authorizationInfo, AuthConstant.Bearer)) {
+        if (!StringUtils.startsWithIgnoreCase(authorizationInfo, AuthConstants.Bearer)) {
             return webFluxResponseWriter(response, MediaType.APPLICATION_JSON_VALUE, HttpStatus.UNAUTHORIZED, "令牌格式不正确,仅支持Bearer token", 401);
         }
 
@@ -79,12 +83,26 @@ public class AuthFilter extends AbstractFilter {
             return webFluxResponseWriter(response, MediaType.APPLICATION_JSON_VALUE, HttpStatus.UNAUTHORIZED, "令牌已失效,当前用户已退出登录,请重新登录", 401);
         }
 
-        return chain.filter(exchange);
+        var mutate = request.mutate();
+        addHeaders(mutate, extractAuthInfo(authInfo));
+
+        return chain.filter(exchange.mutate().request(mutate.build()).build());
     }
 
     @Override
     public int getOrder() {
         return Ordered.AUTH.ordinal();
+    }
+
+    private Map<String, Object> extractAuthInfo(AuthInfo info) {
+        AssertUtil.notNull(info, "认证信息不能为空！");
+        var result = new HashMap<String, Object>(5);
+        result.put(AuthHeaderConstants.ACCOUNT, info.getAccount());
+        result.put(AuthHeaderConstants.ACCOUNT_ID, info.getAccountId());
+        result.put(AuthHeaderConstants.DEPT_ID, info.getDeptId());
+        result.put(AuthHeaderConstants.DEPT_NAME, info.getDeptName());
+        result.put(AuthHeaderConstants.ACCOUNT_NAME, info.getAccountName());
+        return result;
     }
 
     /**
@@ -94,7 +112,7 @@ public class AuthFilter extends AbstractFilter {
      * @return true 通过,false 拦截
      */
     private boolean blackTokenFilter(String tokenId) {
-        final var fullTokenKey = AuthConstant.TOKEN_BLACK_KEY_PREFIX + tokenId;
+        final var fullTokenKey = AuthConstants.TOKEN_BLACK_KEY_PREFIX + tokenId;
         // TODO redis hasKey
         return true;
     }

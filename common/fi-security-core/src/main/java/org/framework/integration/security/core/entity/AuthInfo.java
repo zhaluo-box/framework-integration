@@ -41,11 +41,13 @@ public class AuthInfo {
 
     /**
      * tokenId 用于后期tokenStore
+     * 只用于gateway 登录状态判定
      */
     private String tokenId;
 
     /**
      * 角色列表
+     * 用于权限过滤，gateway 基于AntMatch实现
      */
     private String[] roles;
 

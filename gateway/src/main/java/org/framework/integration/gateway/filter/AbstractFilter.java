@@ -10,9 +10,15 @@ import org.springframework.core.Ordered;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
+
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * Created  on 2022/8/2 14:14:17
@@ -50,6 +56,16 @@ public abstract class AbstractFilter implements GlobalFilter, Ordered {
         ResponseEntity<Void> result = ResponseEntity.fail(code, message);
         DataBuffer dataBuffer = response.bufferFactory().wrap(JsonUtil.toJSON(result).getBytes());
         return response.writeWith(Mono.just(dataBuffer));
+    }
+
+    protected static void addHeaders(ServerHttpRequest.Builder mutate, Map<String, Object> headers) {
+        headers.forEach((k, v) -> addHeader(mutate, k, v));
+    }
+
+    protected static void addHeader(ServerHttpRequest.Builder mutate, String headerName, Object headerValue) {
+        if (Objects.nonNull(headerValue)) {
+            mutate.header(headerName, URLEncoder.encode(String.valueOf(headerValue), StandardCharsets.UTF_8));
+        }
     }
 
     enum Ordered {
