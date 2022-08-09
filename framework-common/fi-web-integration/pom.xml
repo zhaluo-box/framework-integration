@@ -8,6 +8,12 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>fi-web-boot-starter</module>
+        <module>fi-web-common-core</module>
+    </modules>
 
     <artifactId>fi-web-integration</artifactId>
 
@@ -17,18 +23,15 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <dependencies>
 
-        <dependency>
-            <groupId>org.framework.integration</groupId>
-            <artifactId>fi-security-core</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-
-    </dependencies>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.framework.integration</groupId>
+                <artifactId>fi-web-common-core</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
 </project>

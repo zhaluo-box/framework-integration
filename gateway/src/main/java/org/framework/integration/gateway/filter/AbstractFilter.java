@@ -4,7 +4,6 @@ import org.framework.integration.common.core.http.response.ResponseEntity;
 import org.framework.integration.gateway.config.SecurityFilterProperties;
 import org.framework.integration.utils.json.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
 import org.springframework.core.io.buffer.DataBuffer;
@@ -12,7 +11,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
-import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import java.net.URLEncoder;
@@ -28,27 +26,7 @@ import java.util.Objects;
 public abstract class AbstractFilter implements GlobalFilter, Ordered {
 
     @Autowired
-    private SecurityFilterProperties securityFilterProperties;
-
-    /**
-     * @param exchange
-     * @param chain
-     * @return
-     */
-    protected boolean filterBefore(ServerWebExchange exchange, GatewayFilterChain chain) {
-
-        return false;
-    }
-
-    /**
-     * @param exchange
-     * @param chain
-     * @return
-     */
-    protected boolean filterAfter(ServerWebExchange exchange, GatewayFilterChain chain) {
-
-        return false;
-    }
+    protected SecurityFilterProperties securityFilterProperties;
 
     protected static Mono<Void> webFluxResponseWriter(ServerHttpResponse response, String contentType, HttpStatus status, String message, int code) {
         response.setStatusCode(status);

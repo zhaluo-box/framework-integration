@@ -13,7 +13,7 @@ import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
-import java.util.Locale;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -21,8 +21,10 @@ import java.util.Map;
  * Created  on 2022/7/28 16:16:28
  *
  * @author zl
+ * @see org.framework.integration.security.core.utils #JwtUtilTest
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
+@SuppressWarnings("unused")
 public final class JwtUtil {
 
     /**
@@ -36,8 +38,10 @@ public final class JwtUtil {
 
     /**
      * 创建token
-     * <h> 基于HS512算法</h>
      * TODO  实现时间换算 TimeUnit
+     * <h3> 基于HS512算法</h3> <br/>
+     * <h3>如果使用自定义Claim 约定使用 XXX.class.getSimpleName()</h3>
+     * <h3>如果使用jwt 约定的属性，则使用 </h3> @see io.jsonwebtoken.Claims 中的常量
      *
      * @param claims claim
      * @param ttl    过期时间
@@ -58,12 +62,22 @@ public final class JwtUtil {
     }
 
     /**
+     * @param token
+     * @return
+     */
+    public static Claims getCustomClaims(String token) {
+        return getJwtParser(new HashMap<>()).parseClaimsJws(token).getBody();
+    }
+
+    /**
      * 返回自定义claim 类型的body
+     * 推荐使用  getClaims(String token)
      *
      * @param claimType claimName = claimType.getSimpleName();
      */
+    @Deprecated
     public static <T> T getCustomClaims(String token, Class<T> claimType) {
-        final var claimTypeName = claimType.getSimpleName().toLowerCase(Locale.ROOT);
+        final var claimTypeName = claimType.getSimpleName();
         return getJwtParser(Map.of(claimTypeName, claimType)).parseClaimsJws(token).getBody().get(claimTypeName, claimType);
     }
 
@@ -72,6 +86,7 @@ public final class JwtUtil {
      *
      * @param claimName 自定义claim 名称
      */
+    @Deprecated
     public static <T> T getCustomClaims(String token, String claimName, Class<T> claimType) {
         return getJwtParser(Map.of(claimName, claimType)).parseClaimsJws(token).getBody().get(claimName, claimType);
     }
@@ -80,7 +95,10 @@ public final class JwtUtil {
      * 返回自定义claim 类型的body
      *
      * @param claimTypeMapping <claimName,claimType>  claim 映射关系，可以存储多种类型，但是不建议太多
+     * @return 如果想要获取所有的claim 直接 claimTypeMapping 传递 new HashMap<String,Class>();
      */
+    @SuppressWarnings("all")
+    @Deprecated
     public static Map<String, Object> getCustomClaims(String token, Map<String, Class> claimTypeMapping) {
         return getJwtParser(claimTypeMapping).parseClaimsJws(token).getBody();
     }
@@ -98,7 +116,7 @@ public final class JwtUtil {
     /**
      * 获取默认的 JwtParser
      */
-    private static JwtParser getJwtParser() {
+    public static JwtParser getJwtParser() {
         return Jwts.parserBuilder().setSigningKey(KEY).build();
     }
 

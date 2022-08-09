@@ -14,6 +14,7 @@
         <module>fi-web-integration</module>
         <module>fi-web-integration/fi-web-boot-starter</module>
         <module>fi-web-integration/fi-web-common-core</module>
+        <module>fi-common-bom</module>
     </modules>
 
     <properties>
@@ -32,7 +33,6 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-
         </dependencies>
     </dependencyManagement>
 

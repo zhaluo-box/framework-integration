@@ -1,13 +1,11 @@
 package org.framework.integration.gateway.filter;
 
 import lombok.extern.slf4j.Slf4j;
-import org.framework.integration.gateway.config.SecurityFilterProperties;
 import org.framework.integration.security.core.constant.AuthConstants;
 import org.framework.integration.security.core.constant.AuthHeaderConstants;
 import org.framework.integration.security.core.entity.AuthInfo;
 import org.framework.integration.security.core.utils.JwtUtil;
 import org.framework.integration.utils.validator.AssertUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -19,6 +17,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,10 +31,7 @@ import java.util.Map;
 @Component
 public class AuthFilter extends AbstractFilter {
 
-    @Autowired
-    private SecurityFilterProperties securityFilterProperties;
-
-    private final AntPathMatcher antPathMatcher = new AntPathMatcher();
+    final AntPathMatcher antPathMatcher = new AntPathMatcher();
 
     /**
      * 过滤白名单， 基于antMatch
@@ -45,10 +41,6 @@ public class AuthFilter extends AbstractFilter {
      * 基于tokenId redis 查询有效时间进行验证
      * 将token包含的信息 设置到Http header
      * 移除其他header
-     *
-     * @param exchange
-     * @param chain
-     * @return
      */
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
@@ -77,16 +69,31 @@ public class AuthFilter extends AbstractFilter {
 
         // 解析token
         var token = authorizationInfo.split(" ")[1];
-        final var authInfo = JwtUtil.getCustomClaims(token, AuthInfo.class);
+        //        final var authInfo = JwtUtil.getCustomClaims(token, AuthInfo.class);
+
+        var customClaims = JwtUtil.getCustomClaims(token);
+        var authInfo = customClaims.get(AuthInfo.class.getSimpleName(), AuthInfo.class);
+
         // 黑名单token 过滤
         if (!blackTokenFilter(authInfo.getTokenId())) {
             return webFluxResponseWriter(response, MediaType.APPLICATION_JSON_VALUE, HttpStatus.UNAUTHORIZED, "令牌已失效,当前用户已退出登录,请重新登录", 401);
         }
 
+        // 校验是否刷新token
+        if (verifyIsNeedRefreshToken(customClaims.getExpiration())) {
+            var newToken = JwtUtil.createToken(Map.of(AuthInfo.class.getSimpleName(), AuthInfo.class), securityFilterProperties.getTtl());
+            response.getHeaders().add("new_token", newToken);
+        }
+
         var mutate = request.mutate();
         addHeaders(mutate, extractAuthInfo(authInfo));
 
+        // TODO 后期验证是否还需要对request 重新构建
         return chain.filter(exchange.mutate().request(mutate.build()).build());
+    }
+
+    private boolean verifyIsNeedRefreshToken(Date expireDate) {
+        return expireDate.getTime() - new Date().getTime() <= securityFilterProperties.getRefreshOffset();
     }
 
     @Override
@@ -123,7 +130,6 @@ public class AuthFilter extends AbstractFilter {
             return false;
         }
 
-        //        var antPathMatcher = new AntPathMatcher();
         long count = patterns.stream().filter(pattern -> antPathMatcher.match(pattern, url)).count();
         return count > 0;
     }

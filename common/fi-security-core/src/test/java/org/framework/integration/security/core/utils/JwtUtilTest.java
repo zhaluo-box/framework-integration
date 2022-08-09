@@ -2,6 +2,7 @@ package org.framework.integration.security.core.utils;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Date;
 import java.util.HashMap;
 
 /**
@@ -18,13 +19,20 @@ class JwtUtilTest {
         var claim = new HashMap<String, Object>();
         claim.put("user", zhang_san);
         claim.put("student", student);
+        System.out.println(new Date(System.currentTimeMillis() + 10 * 60 * 1000));
         String token = JwtUtil.createToken(claim, 10 * 60 * 1000);
         System.out.println(JwtUtil.getCustomClaims(token, User.class));
 
         var claimTypeMapping = new HashMap<String, Class>();
-        claim.put(User.class.getSimpleName(), User.class);
-        claim.put(Student.class.getSimpleName(), Student.class);
+        // claim.put(User.class.getSimpleName(), User.class);
+        // claim.put(Student.class.getSimpleName(), Student.class);
         System.out.println(JwtUtil.getCustomClaims(token, claimTypeMapping));
+
+        var expiration = JwtUtil.getJwtParser().parseClaimsJws(token).getBody().getExpiration();
+        var issuedAt = JwtUtil.getJwtParser().parseClaimsJws(token).getBody().getIssuedAt();
+
+        System.out.println(expiration.getTime());
+        System.out.println(issuedAt.getTime());
 
     }
 
