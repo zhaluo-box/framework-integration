@@ -3,36 +3,30 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>framework-integration</artifactId>
+        <artifactId>framework-common</artifactId>
         <groupId>org.framework.integration</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>framework-common</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>fi-web-integration</module>
-        <module>fi-web-integration/fi-web-boot-starter</module>
-        <module>fi-web-integration/fi-web-common-core</module>
-        <module>fi-common-bom</module>
-        <module>fi-openfeign-integration</module>
+        <module>fi-openfeign-cloud-starter</module>
     </modules>
+
+    <artifactId>fi-openfeign-integration</artifactId>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
 
     <dependencyManagement>
         <dependencies>
-            <!-- 公共模块 -->
             <dependency>
                 <groupId>org.framework.integration</groupId>
-                <artifactId>common</artifactId>
-                <version>${common.project.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
+                <artifactId>fi-openfeign-cloud-starter</artifactId>
+                <version>1.0-SNAPSHOT</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

@@ -1,5 +1,6 @@
 package org.framework.integration.web.common.security;
 
+import com.alibaba.ttl.TransmittableThreadLocal;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.framework.integration.security.core.entity.AuthInfo;
@@ -12,7 +13,7 @@ import org.framework.integration.security.core.entity.AuthInfo;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class SecurityContextHolder {
 
-    private final static ThreadLocal<AuthInfo> AUTH_INFO = new ThreadLocal<>();
+    private final static TransmittableThreadLocal<AuthInfo> AUTH_INFO = new TransmittableThreadLocal<>();
 
     public static void setAuthInfo(AuthInfo authInfo) {
         AUTH_INFO.set(authInfo);

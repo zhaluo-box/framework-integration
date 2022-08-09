@@ -42,6 +42,7 @@
 
         <!--   ************ util version management *********************     -->
         <jjwt.version>0.11.5</jjwt.version>
+        <transmittable-thread-local.version>2.12.2</transmittable-thread-local.version>
 
     </properties>
 
@@ -111,6 +112,13 @@
                 <groupId>io.jsonwebtoken</groupId>
                 <artifactId>jjwt-jackson</artifactId> <!-- or jjwt-gson if Gson is preferred -->
                 <version>${jjwt.version}</version>
+            </dependency>
+
+            <!-- 线程传递值 -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>transmittable-thread-local</artifactId>
+                <version>${transmittable-thread-local.version}</version>
             </dependency>
 
         </dependencies>

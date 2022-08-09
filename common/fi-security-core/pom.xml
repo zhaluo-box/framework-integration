@@ -22,6 +22,7 @@
             <artifactId>lombok</artifactId>
         </dependency>
 
+
         <!-- Jwt -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
@@ -47,6 +48,8 @@
             <artifactId>junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
+
+
     </dependencies>
 
 </project>
