@@ -26,6 +26,7 @@
 
 
         <dependencies>
+
             <dependency>
                 <groupId>org.framework.integration</groupId>
                 <artifactId>sys-base-client</artifactId>

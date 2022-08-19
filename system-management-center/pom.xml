@@ -14,7 +14,7 @@
     <modules>
         <module>sys-base</module>
         <module>sys-file</module>
-        <module>sys-minior</module>
+        <module>sys-monitor</module>
     </modules>
 
     <properties>

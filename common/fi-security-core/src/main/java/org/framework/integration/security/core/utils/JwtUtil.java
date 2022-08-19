@@ -13,7 +13,6 @@ import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -53,6 +52,7 @@ public final class JwtUtil {
 
     /**
      * 返回默认claims
+     * 只支持基本类型
      *
      * @param token token
      * @return claims
@@ -62,20 +62,11 @@ public final class JwtUtil {
     }
 
     /**
-     * @param token
-     * @return
-     */
-    public static Claims getCustomClaims(String token) {
-        return getJwtParser(new HashMap<>()).parseClaimsJws(token).getBody();
-    }
-
-    /**
      * 返回自定义claim 类型的body
      * 推荐使用  getClaims(String token)
      *
      * @param claimType claimName = claimType.getSimpleName();
      */
-    @Deprecated
     public static <T> T getCustomClaims(String token, Class<T> claimType) {
         final var claimTypeName = claimType.getSimpleName();
         return getJwtParser(Map.of(claimTypeName, claimType)).parseClaimsJws(token).getBody().get(claimTypeName, claimType);
@@ -98,8 +89,7 @@ public final class JwtUtil {
      * @return 如果想要获取所有的claim 直接 claimTypeMapping 传递 new HashMap<String,Class>();
      */
     @SuppressWarnings("all")
-    @Deprecated
-    public static Map<String, Object> getCustomClaims(String token, Map<String, Class> claimTypeMapping) {
+    public static Claims getCustomClaims(String token, Map<String, Class> claimTypeMapping) {
         return getJwtParser(claimTypeMapping).parseClaimsJws(token).getBody();
     }
 
@@ -127,7 +117,7 @@ public final class JwtUtil {
      * @param claimTypeMap 自定义claim 类型映射
      */
     @SuppressWarnings("all")
-    private static JwtParser getJwtParser(Map<String, Class> claimTypeMap) {
+    public static JwtParser getJwtParser(Map<String, Class> claimTypeMap) {
         return Jwts.parserBuilder().deserializeJsonWith(new JacksonDeserializer<>(claimTypeMap)).setSigningKey(KEY).build();
     }
 

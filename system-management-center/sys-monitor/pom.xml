@@ -3,13 +3,13 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>auth-center</artifactId>
+        <artifactId>system-management-center</artifactId>
         <groupId>org.framework.integration</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>auth-common</artifactId>
+    <artifactId>sys-monitor</artifactId>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>

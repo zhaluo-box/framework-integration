@@ -5,6 +5,7 @@ import org.framework.integration.sys.base.common.service.LogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -20,12 +21,12 @@ public class LogController {
     private LogService logService;
 
     @PostMapping("actions/login/")
-    public ResponseEntity<String> login(String account, String password) {
+    public ResponseEntity<String> login(@RequestParam String account, @RequestParam String password) {
         return ResponseEntity.ok(logService.login(account, password), "登录成功");
     }
 
     @PostMapping("actions/logout/")
-    public ResponseEntity<Void> logout(String account) {
+    public ResponseEntity<Void> logout(@RequestParam String account) {
         logService.logout(account);
         return ResponseEntity.ok();
     }

@@ -1,0 +1,104 @@
+spring:
+  profiles:
+    active: dev
+logging:
+  file:
+    name: /home/logs/${spring.application.name}/${spring.application.name}.log
+
+
+server:
+  port: 11998
+
+#mybatis-plus:
+#  type-aliases-package: com.ruoyi.system
+#  global-config:
+#    db-config:
+#      logic-delete-value: 1 # 逻辑已删除值(默认为 1)
+#      logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
+
+---
+# Tomcat
+# Spring
+spring:
+  application:
+    # 应用名称
+    name: sys-base
+  cloud:
+    nacos:
+      discovery:
+        # 服务注册地址
+        server-addr: 127.0.0.1:8848
+        namespace: fi-${spring.config.activate.on-profile}
+      config:
+        # 配置中心地址
+        server-addr: ${spring.cloud.nacos.discovery.server-addr}
+        namespace: fi-${spring.config.activate.on-profile}
+        # 配置文件格式
+        file-extension: yml
+        # 共享配置
+        shared-configs:
+          - application.${spring.cloud.nacos.config.file-extension}
+  config:
+    activate:
+      on-profile: dev
+
+
+
+
+---
+# Tomcat
+
+
+# Spring
+spring:
+  application:
+    # 应用名称
+    name: sys-base
+  cloud:
+    nacos:
+      discovery:
+        # 服务注册地址
+        server-addr: 127.0.0.1:8848
+        namespace: fi-${spring.config.activate.on-profile}
+      config:
+        # 配置中心地址
+        server-addr: ${spring.cloud.nacos.discovery.server-addr}
+        namespace: fi-${spring.config.activate.on-profile}
+        # 配置文件格式
+        file-extension: yml
+        # 共享配置
+        shared-configs:
+          - application.${spring.cloud.nacos.config.file-extension}
+  config:
+    activate:
+      on-profile: test
+
+
+
+---
+# Tomcat
+
+
+# Spring
+spring:
+  application:
+    # 应用名称
+    name: sys-base
+  cloud:
+    nacos:
+      discovery:
+        # 服务注册地址
+        server-addr: 127.0.0.1:8848
+        namespace: fi-${spring.config.activate.on-profile}
+      config:
+        # 配置中心地址
+        server-addr: ${spring.cloud.nacos.discovery.server-addr}
+        namespace: fi-${spring.config.activate.on-profile}
+        # 配置文件格式
+        file-extension: yml
+        # 共享配置
+        shared-configs:
+          - application.${spring.cloud.nacos.config.file-extension}
+  config:
+    activate:
+      on-profile: prod

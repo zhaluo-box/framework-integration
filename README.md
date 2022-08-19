@@ -12,7 +12,7 @@
 
 - business-center : 业务中心
 - system-management-center： 系统管理中心
-    - sys-minitor: 系统监控
+    - sys-monitor: 系统监控
     - sys-file: 文件统一管理
     - sys-base: 系统基础服务：
         - controller

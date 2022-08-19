@@ -12,6 +12,8 @@ import org.springframework.web.servlet.AsyncHandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Created  on 2022/8/5 17:17:26
@@ -60,14 +62,18 @@ public class SecurityContextInterceptor implements AsyncHandlerInterceptor {
 
     private String getHeader(HttpServletRequest request, String headerName) {
         Assert.notNull(request, "获取请求头，请求不能为空");
-        return request.getHeader(headerName);
+        String value = request.getHeader(headerName);
+        if (!StringUtils.hasText(value)) {
+            return "";
+        }
+        return URLDecoder.decode(value, StandardCharsets.UTF_8);
     }
 
     /**
      * 如果为空，则返回0
      */
     private long strToLong(String headerValue) {
-        if (StringUtils.hasText(headerValue)) {
+        if (!StringUtils.hasText(headerValue)) {
             return 0;
         }
         return Long.parseLong(headerValue);

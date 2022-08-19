@@ -71,7 +71,7 @@ public class AuthFilter extends AbstractFilter {
         var token = authorizationInfo.split(" ")[1];
         //        final var authInfo = JwtUtil.getCustomClaims(token, AuthInfo.class);
 
-        var customClaims = JwtUtil.getCustomClaims(token);
+        var customClaims = JwtUtil.getCustomClaims(token, Map.of(AuthInfo.class.getSimpleName(), AuthInfo.class));
         var authInfo = customClaims.get(AuthInfo.class.getSimpleName(), AuthInfo.class);
 
         // 黑名单token 过滤

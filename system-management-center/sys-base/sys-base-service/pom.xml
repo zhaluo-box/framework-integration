@@ -19,15 +19,9 @@
     <dependencies>
 
         <dependency>
-            <groupId>org.framework.integration</groupId>
-            <artifactId>sys-base-common</artifactId>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-bootstrap</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-
         <!-- SpringCloud Alibaba Nacos -->
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
@@ -49,8 +43,16 @@
 
         <dependency>
             <groupId>org.framework.integration</groupId>
-            <artifactId>fi-security-core</artifactId>
+            <artifactId>sys-base-common</artifactId>
         </dependency>
+
+
+        <dependency>
+            <groupId>org.framework.integration</groupId>
+            <artifactId>fi-web-boot-starter</artifactId>
+        </dependency>
+
+
         <dependency>
             <groupId>org.framework.integration</groupId>
             <artifactId>fi-common-core</artifactId>
