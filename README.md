@@ -39,3 +39,9 @@
 ## 工具类：
 
 - JWT 工具类
+
+## 代集成的一些功能
+
+- 集成swagger ui
+    - 通过swagger ui与apiFox 结合使用方便代码调试 
+    
