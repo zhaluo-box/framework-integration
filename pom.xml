@@ -15,6 +15,7 @@
         <module>common</module>
         <module>framework-common</module>
         <module>task-center</module>
+        <module>fi-example</module>
     </modules>
 
     <properties>

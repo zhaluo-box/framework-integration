@@ -4,7 +4,7 @@
 
 ## 登录
 
-    登录基于JWT token 无状态实现。 
+    登录基于JWT token 无状态实现。
     token 续约的方式
         单token， token本身无时间限制， 基于redis实现过期
         单token， token本身有时间限制， 基于JWT expireTime 实现， 每次访问验证时间，然后根据续约时间 校验时间，刷新token
@@ -14,8 +14,8 @@
             会存在从新发起请求入参传递的问题
             refresh_token 失效则真正意义上认为token失效
             网上还有一种解决方案：
-                access_token： 过期，但是小于refresh_token 过期时间，则放行，并在response header 标记，前端拦截 
-                refesh_token： 前端拦截到 response header 带着refresh_token 刷新
+                access_token： 过期，但是小于refresh_token 过期时间，则放行，并在response header 标记，前端拦截
+                refresh_token： 前端拦截到 response header 带着refresh_token 刷新
 
 采取单token，token有时间限制，结合http response header 来拦截刷新
 
@@ -29,4 +29,4 @@
 采取黑名单的方式，请求拦截token
 
 ## 注册
-    
+
