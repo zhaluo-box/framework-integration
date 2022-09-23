@@ -1,4 +1,4 @@
-package org.framework.integration.entity;
+package org.framework.integration.example.common.dto;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

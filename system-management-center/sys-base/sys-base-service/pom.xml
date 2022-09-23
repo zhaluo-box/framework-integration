@@ -34,7 +34,6 @@
             <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
         </dependency>
 
-
         <!-- SpringBoot Actuator -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -46,16 +45,19 @@
             <artifactId>sys-base-common</artifactId>
         </dependency>
 
-
         <dependency>
             <groupId>org.framework.integration</groupId>
             <artifactId>fi-web-boot-starter</artifactId>
         </dependency>
 
-
         <dependency>
             <groupId>org.framework.integration</groupId>
             <artifactId>fi-common-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.framework.integration</groupId>
+            <artifactId>fi-swagger-boot-starter</artifactId>
         </dependency>
 
     </dependencies>

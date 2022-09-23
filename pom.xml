@@ -30,19 +30,21 @@
         <spring.cloud.dependencies>2020.0.5</spring.cloud.dependencies>
         <!--  spring-core 版本请保证与spring.boot.dependencies 包含的一致      -->
         <spring-framework.version>5.3.3</spring-framework.version>
+        <!--jackson 的依赖与spring-boot-dependencies 中的保持一致-->
+        <jackson-bom.version>2.11.4</jackson-bom.version>
 
         <lombok.version>1.18.20</lombok.version>
         <mybaits-plus.version>3.5.1</mybaits-plus.version>
         <!-- TODO　dependencyManagement 中的依赖版本统一有properties 管理　　-->
         <bootstrap.starter.version>3.1.0</bootstrap.starter.version>
 
+        <!--   ************ Util version management *********************     -->
+        <jjwt.version>0.11.5</jjwt.version>
+        <transmittable-thread-local.version>2.12.2</transmittable-thread-local.version>
+
         <!--  common 模块版本控制      -->
         <common.project.version>1.0-SNAPSHOT</common.project.version>
         <framework-common.project.version>1.0-SNAPSHOT</framework-common.project.version>
-
-        <!--   ************ util version management *********************     -->
-        <jjwt.version>0.11.5</jjwt.version>
-        <transmittable-thread-local.version>2.12.2</transmittable-thread-local.version>
 
     </properties>
 
@@ -84,6 +86,14 @@
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-framework-bom</artifactId>
                 <version>${spring-framework.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.jackson</groupId>
+                <artifactId>jackson-bom</artifactId>
+                <version>${jackson-bom.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

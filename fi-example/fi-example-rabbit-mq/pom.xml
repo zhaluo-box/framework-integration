@@ -13,7 +13,9 @@
     <packaging>pom</packaging>
     <description>Rabbit MQ 集成案例</description>
     <modules>
+        <module>fi-rabbit-common</module>
         <module>fi-rabbit-producer</module>
+        <module>fi-rabbit-consumer</module>
     </modules>
 
     <properties>
@@ -22,5 +24,15 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.framework.integration</groupId>
+                <artifactId>fi-rabbit-common</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
 </project>

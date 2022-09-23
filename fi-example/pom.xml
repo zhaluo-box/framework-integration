@@ -14,8 +14,6 @@
     <description>框架集成案例</description>
     <modules>
         <module>fi-example-rabbit-mq</module>
-        <module>fi-example-rabbit-mq/fi-rabbit-consumer</module>
-        <module>fi-example-rabbit-mq/fi-rabbit-common</module>
     </modules>
 
     <properties>
@@ -23,5 +21,30 @@
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+    <dependencyManagement>
+        <dependencies>
+            <!-- 公共模块 -->
+            <dependency>
+                <groupId>org.framework.integration</groupId>
+                <artifactId>common</artifactId>
+                <version>${common.project.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- 框架集成公共模块，主要是一些starter 启动相关的jar包            -->
+            <dependency>
+                <groupId>org.framework.integration</groupId>
+                <artifactId>framework-common</artifactId>
+                <version>${framework-common.project.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
 
+            <dependency>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-annotations</artifactId>
+                <version>1.6.6</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 </project>
