@@ -17,6 +17,7 @@ import java.util.UUID;
 public class DefaultLogService implements LogService {
 
     /**
+     * TODO 后期考虑是否将登录登出放到gateway 统一 ttl时间
      * 代码暂时采用mock的形式 实现token
      *
      * @param account  账户
@@ -33,7 +34,7 @@ public class DefaultLogService implements LogService {
         // 包装认证信息
         var authInfo = getAuthInfo(null);
         // 创建token 返回
-        String token = JwtUtil.createToken(Map.of(AuthInfo.class.getSimpleName(), authInfo), 10 * 60 * 1000);
+        String token = JwtUtil.createToken(Map.of(AuthInfo.class.getSimpleName(), authInfo), 60000000);
         // 记录登录日志
         recordLogInfo(null);
         return token;
