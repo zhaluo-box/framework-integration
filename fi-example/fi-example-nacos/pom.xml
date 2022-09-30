@@ -43,6 +43,11 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.framework.integration</groupId>
+            <artifactId>fi-swagger-boot-starter</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>

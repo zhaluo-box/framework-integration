@@ -1,0 +1,9 @@
+server:
+  port: 12003
+
+
+
+test:
+  nacos:
+    properties:
+      lifecycle: application.yml

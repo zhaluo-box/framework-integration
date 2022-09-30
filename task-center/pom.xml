@@ -18,7 +18,7 @@
     </properties>
 
     <modules>
-        <module>xxl-job</module>
+        <!--        <module>xxl-job</module>-->
     </modules>
 
     <dependencyManagement>

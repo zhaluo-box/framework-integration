@@ -13,6 +13,9 @@
 - business-center : 业务中心 接口18001 开始
 - fi-example : 集成案例 接口从 12001 开始
     - fi-example-rabbit-mq : Rabbit-MQ 案例
+        - producer : 12001
+        - consumer : 12002
+    - fi-example-nacos : 12003
 
 - system-management-center： 系统管理中心 接口 11001 开始
     - sys-monitor: 系统监控
