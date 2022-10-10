@@ -21,6 +21,16 @@ public class NacosConfigController {
     @Value("${test.nacos.properties.lifecycle}")
     private String value;
 
+    /**
+     * profile> 服务名称.yml > 服务名称（没有后缀） > extension > shared
+     * [BootstrapPropertySource {name='bootstrapProperties-example-nacos-dev.yml,DEFAULT_GROUP'},
+     * BootstrapPropertySource {name='bootstrapProperties-example-nacos.yml,DEFAULT_GROUP'},
+     * BootstrapPropertySource {name='bootstrapProperties-example-nacos,DEFAULT_GROUP'},
+     * BootstrapPropertySource {name='bootstrapProperties-extension-nacos-test-config2.yml,DEFAULT_GROUP'},
+     * BootstrapPropertySource {name='bootstrapProperties-extension-nacos-test-config1.yml,DEFAULT_GROUP'},
+     * BootstrapPropertySource {name='bootstrapProperties-shared-nacos-test-config2.yml,DEFAULT_GROUP'},
+     * BootstrapPropertySource {name='bootstrapProperties-shared-nacos-test-config1.yml,DEFAULT_GROUP'}]
+     */
     @GetMapping("actions/config-lifecycle/")
     @ApiOperation("测试nacos 配置文件生效顺序")
     public ResponseEntity<String> configLifecycle() {
