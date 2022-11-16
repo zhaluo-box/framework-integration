@@ -43,10 +43,23 @@ public class ProducerController {
 
     /**
      * 路由 direct route
+     * 对于自定义的payload 需要实现序列化接口，否则投递会异常
      */
     @PostMapping("actions/direct/")
-    @ApiOperation("路由交换")
+    @ApiOperation("路由交换 direct route")
     public ResponseEntity<Void> directQueue(@RequestBody BaseMessage<String> message) {
+        if (message.getTarget().equalsIgnoreCase("info")) {
+            amqpTemplate.convertAndSend(ExchangeDeclare.DIRECT_EXCHANGE, "info", message);
+        }
+        if (message.getTarget().equalsIgnoreCase("debug")) {
+            amqpTemplate.convertAndSend(ExchangeDeclare.DIRECT_EXCHANGE, "debug", message);
+        }
+        if (message.getTarget().equalsIgnoreCase("warn")) {
+            amqpTemplate.convertAndSend(ExchangeDeclare.DIRECT_EXCHANGE, "warn", message);
+        }
+        if (message.getTarget().equalsIgnoreCase("error")) {
+            amqpTemplate.convertAndSend(ExchangeDeclare.DIRECT_EXCHANGE, "error", message);
+        }
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
@@ -69,7 +82,7 @@ public class ProducerController {
     }
 
     /**
-     * 私信队列测试
+     * 死信队列测试
      */
     @PostMapping("actions/dead-letter/")
     @ApiOperation("路由交换")
