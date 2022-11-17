@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.nio.charset.StandardCharsets;
 
 /**
+ * 对于使用系统默认交换机的队列 队列名称作为routeKey 使用
  * Created  on 2022/9/20 11:11:49
  *
  * @author wmz
