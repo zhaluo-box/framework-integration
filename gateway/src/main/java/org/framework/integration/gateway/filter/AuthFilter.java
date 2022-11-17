@@ -74,6 +74,8 @@ public class AuthFilter extends AbstractFilter {
         var customClaims = JwtUtil.getCustomClaims(token, Map.of(AuthInfo.class.getSimpleName(), AuthInfo.class));
         var authInfo = customClaims.get(AuthInfo.class.getSimpleName(), AuthInfo.class);
 
+        // TODO @wmz 2022/11/17 验证token 是否过期
+
         // 黑名单token 过滤
         if (!blackTokenFilter(authInfo.getTokenId())) {
             return webFluxResponseWriter(response, MediaType.APPLICATION_JSON_VALUE, HttpStatus.UNAUTHORIZED, "令牌已失效,当前用户已退出登录,请重新登录", 401);

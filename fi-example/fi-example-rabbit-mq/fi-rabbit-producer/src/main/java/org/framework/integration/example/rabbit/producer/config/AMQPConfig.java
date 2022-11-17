@@ -1,6 +1,9 @@
 package org.framework.integration.example.rabbit.producer.config;
 
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionNameStrategy;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +20,15 @@ public class AMQPConfig {
 
     @Value("${spring.application.name}")
     private String connectionName;
+
+    @Bean
+    public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
+        var rabbitTemplate = new RabbitTemplate(connectionFactory);
+        var messageConverter = new Jackson2JsonMessageConverter();
+        //        messageConverter.setClassMapper(); 支持指定class 集合(idClassMapping ) 支持指定默认type  @see DefaultClassMapper
+        rabbitTemplate.setMessageConverter(messageConverter);
+        return rabbitTemplate;
+    }
 
     /**
      * 生命连接名称，springboot amqp stater 会自动检测到，并进行设置

@@ -3,7 +3,9 @@ package org.framework.integration.example.rabbit.producer.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.framework.integration.example.common.constant.ExchangeDeclare;
+import org.framework.integration.example.common.constant.QueueDeclare;
 import org.framework.integration.example.common.dto.BaseMessage;
+import org.framework.integration.example.rabbit.producer.entity.CustomMessage;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,19 +27,33 @@ public class ProducerController {
     private AmqpTemplate amqpTemplate;
 
     /**
-     * 简单队列测试
+     * 简单队列测试 走系统默认队列 routeKey 就队列名称即可
      */
-    @PostMapping("actions/simple-queue/")
     @ApiOperation("简单队列测试")
+    @PostMapping("actions/simple-queues/")
     public ResponseEntity<Void> simpleQueue(@RequestBody BaseMessage<String> message) {
-        amqpTemplate.convertAndSend(ExchangeDeclare.SIMPLE_EXCHANGE, "", message.getData());
+        amqpTemplate.convertAndSend(QueueDeclare.SIMPLE_QUEUE, message.getData());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
+    @ApiOperation("竞争队列测试")
+    @PostMapping("actions/work-queues/")
+    public ResponseEntity<Void> workQueue(@RequestBody BaseMessage<String> message) {
+        amqpTemplate.convertAndSend(QueueDeclare.WORK_QUEUE, message.getData());
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    /**
+     * 经过测试routeKey 是不生效的 在rabbit admin ui 里面exchange 与 queue 的绑定关系里 没有routeKey
+     */
     @PostMapping("actions/fanout/")
     @ApiOperation("广播测试")
-    public ResponseEntity<Void> fanoutQueue(@RequestBody BaseMessage<String> message) {
-        amqpTemplate.convertAndSend(ExchangeDeclare.WORK_EXCHANGE, "", message.getData());
+    public ResponseEntity<Void> fanoutQueue(@RequestBody CustomMessage message) {
+        if (message.getAge() == 1) {
+            amqpTemplate.convertAndSend(ExchangeDeclare.FANOUT_EXCHANGE, "1", message);
+        } else {
+            amqpTemplate.convertAndSend(ExchangeDeclare.FANOUT_EXCHANGE, "2", message);
+        }
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
@@ -77,7 +93,8 @@ public class ProducerController {
      */
     @PostMapping("actions/custom-objects/")
     @ApiOperation("路由交换")
-    public ResponseEntity<Void> customObject(@RequestBody BaseMessage<String> message) {
+    public ResponseEntity<Void> customObject(@RequestBody CustomMessage message) {
+
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 

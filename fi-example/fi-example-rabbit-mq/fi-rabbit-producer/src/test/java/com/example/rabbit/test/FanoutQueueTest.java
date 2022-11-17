@@ -7,6 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 /**
+ * 广播模式不需要 定义key 因为本来就给多个队列
  * Created  on 2022/9/20 15:15:05
  *
  * @author wmz
