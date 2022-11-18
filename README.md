@@ -46,12 +46,15 @@
 
 - JWT 工具类
 
-## 代集成的一些功能
+## 待集成的一些功能
 
-- 集成swagger ui
+- [ ] web global exception handler
+- [x] 集成swagger ui
     - 通过swagger ui与apiFox 结合使用方便代码调试
-- 集成 xxl-job
+- [ ] 集成 xxl-job
 
-- 待测试的一些功能：
-    - feign Interceptor
-    
+## 待测试的一些功能：
+
+- feign Interceptor
+
+

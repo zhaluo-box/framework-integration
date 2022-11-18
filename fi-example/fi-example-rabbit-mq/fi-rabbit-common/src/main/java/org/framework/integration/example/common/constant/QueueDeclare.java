@@ -16,7 +16,10 @@ public interface QueueDeclare {
     String FANOUT_QUEUE1 = "fi:example:fanout-queue1";
     String FANOUT_QUEUE2 = "fi:example:fanout-queue2";
 
-    String TOPIC_QUEUE = "fi:example:topic-queue";
+    String TOPIC_QUEUE1 = "fi:example:topic-queue1";
+    String TOPIC_QUEUE2 = "fi:example:topic-queue2";
+    String TOPIC_QUEUE3 = "fi:example:topic-queue3";
+    String TOPIC_QUEUE4 = "fi:example:topic-queue4";
 
     String RPC_QUEUE = "fi:example:rpc-queue";
 

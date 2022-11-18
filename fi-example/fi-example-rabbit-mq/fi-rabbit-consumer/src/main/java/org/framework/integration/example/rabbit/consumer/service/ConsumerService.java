@@ -1,6 +1,7 @@
 package org.framework.integration.example.rabbit.consumer.service;
 
 import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.MessageProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.framework.integration.example.common.constant.ExchangeDeclare;
 import org.framework.integration.example.common.constant.QueueDeclare;
@@ -85,14 +86,56 @@ public class ConsumerService {
      * @see ExchangeTypes
      */
     @RabbitListener(bindings = @QueueBinding(value = @Queue(value = QueueDeclare.FANOUT_QUEUE1), exchange = @Exchange(value = ExchangeDeclare.FANOUT_EXCHANGE, type = ExchangeTypes.FANOUT), key = "1"))
-    public void fanoutLister(@Payload CustomMessage customMessage, Channel channel, @Headers Map<String, Object> headers) {
+    public void fanoutLister(@Payload CustomMessage customMessage, MessageProperties messageProperties, Channel channel, @Headers Map<String, Object> headers) {
         log.warn("message headers : {}", headers);
         log.info("自定义对象消费与fanout(广播)1 ： {} ", customMessage);
     }
 
     @RabbitListener(bindings = @QueueBinding(value = @Queue(value = QueueDeclare.FANOUT_QUEUE2), exchange = @Exchange(value = ExchangeDeclare.FANOUT_EXCHANGE, type = ExchangeTypes.FANOUT), key = "2"))
-    public void fanoutLister2(@Payload CustomMessage customMessage, Channel channel, @Headers Map<String, Object> headers) {
+    public void fanoutLister2(@Payload CustomMessage customMessage, MessageProperties messageProperties, Channel channel,
+                              @Headers Map<String, Object> headers) {
         log.warn("message headers : {}", headers);
         log.error("自定义对象消费与fanout(广播)2 ： {} ", customMessage);
+    }
+
+    @RabbitListener(bindings = @QueueBinding(value = @Queue(value = QueueDeclare.TOPIC_QUEUE4), exchange = @Exchange(value = ExchangeDeclare.TOPIC_EXCHANGE, type = ExchangeTypes.TOPIC), key = {
+                    "topic.*" }))
+    public void topicLogLister(@Payload BaseMessage<String> message, MessageProperties messageProperties) {
+        log.error(" **********  topic-queue 测试 * {}", message);
+    }
+
+    @RabbitListener(bindings = @QueueBinding(value = @Queue(value = QueueDeclare.TOPIC_QUEUE1), exchange = @Exchange(value = ExchangeDeclare.TOPIC_EXCHANGE, type = ExchangeTypes.TOPIC), key = {
+                    "topic.#" }))
+    public void topicLogLister2(@Payload BaseMessage<String> message, MessageProperties messageProperties) {
+        log.warn(" ############  topic-queue 测试 # {}", message);
+    }
+
+    @RabbitListener(bindings = @QueueBinding(value = @Queue(value = QueueDeclare.TOPIC_QUEUE2), exchange = @Exchange(value = ExchangeDeclare.TOPIC_EXCHANGE, type = ExchangeTypes.TOPIC), key = {
+                    "topic.info" }))
+    public void topicLogLister3(@Payload BaseMessage<String> message, MessageProperties messageProperties) {
+        log.info(" iiiiiiiiiiii  topic-queue 测试 info {}", message);
+    }
+
+    /**
+     * 消费者监听, 以队列为维度进行监听  下面的方法能消费哪些消息 是队列决定的，毕竟真正绑定的是routeKey与queue 而不是下面的@queueBinding
+     * 注解上的routeKey 只是用于绑定 下面的 topicLogLister4、5、6 虽然定义了不同的routeKey 但是是否消费消息，取决的还是rabbitMQ queue 绑定的routeKey
+     * { QueueBinding 只做系统启动时的绑定 不做routeKey路由}
+     */
+    @RabbitListener(bindings = @QueueBinding(value = @Queue(value = QueueDeclare.TOPIC_QUEUE3), exchange = @Exchange(value = ExchangeDeclare.TOPIC_EXCHANGE, type = ExchangeTypes.TOPIC), key = {
+                    "topic.debug" }))
+    public void topicLogLister4(@Payload BaseMessage<String> message, MessageProperties messageProperties) {
+        log.debug(" ddddddddddd topic-queue 测试 debug {}", message);
+    }
+
+    @RabbitListener(bindings = @QueueBinding(value = @Queue(value = QueueDeclare.TOPIC_QUEUE3), exchange = @Exchange(value = ExchangeDeclare.TOPIC_EXCHANGE, type = ExchangeTypes.TOPIC), key = {
+                    "*.*" }))
+    public void topicLogLister5(@Payload BaseMessage<String> message, MessageProperties messageProperties) {
+        log.debug(" *.* topic-queue 测试  {}", message);
+    }
+
+    @RabbitListener(bindings = @QueueBinding(value = @Queue(value = QueueDeclare.TOPIC_QUEUE3), exchange = @Exchange(value = ExchangeDeclare.TOPIC_EXCHANGE, type = ExchangeTypes.TOPIC), key = {
+                    "*.*.*" }))
+    public void topicLogLister6(@Payload BaseMessage<String> message, MessageProperties messageProperties) {
+        log.debug(" *.*.* topic-queue 测试  {}", message);
     }
 }

@@ -2,11 +2,15 @@ package org.framework.integration.example.rabbit.producer.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.framework.integration.example.common.constant.ExchangeDeclare;
 import org.framework.integration.example.common.constant.QueueDeclare;
 import org.framework.integration.example.common.dto.BaseMessage;
+import org.framework.integration.example.rabbit.producer.config.ConfirmCallback;
 import org.framework.integration.example.rabbit.producer.entity.CustomMessage;
-import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.amqp.core.MessagePostProcessor;
+import org.springframework.amqp.rabbit.connection.CorrelationData;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,12 +23,13 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author zl
  */
+@Slf4j
 @RestController("/producer/")
 @Api(tags = "Rabbit 生产者测试")
 public class ProducerController {
 
     @Autowired
-    private AmqpTemplate amqpTemplate;
+    private RabbitTemplate rabbitTemplate;
 
     /**
      * 简单队列测试 走系统默认队列 routeKey 就队列名称即可
@@ -32,14 +37,14 @@ public class ProducerController {
     @ApiOperation("简单队列测试")
     @PostMapping("actions/simple-queues/")
     public ResponseEntity<Void> simpleQueue(@RequestBody BaseMessage<String> message) {
-        amqpTemplate.convertAndSend(QueueDeclare.SIMPLE_QUEUE, message.getData());
+        rabbitTemplate.convertAndSend(QueueDeclare.SIMPLE_QUEUE, message.getData());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @ApiOperation("竞争队列测试")
     @PostMapping("actions/work-queues/")
     public ResponseEntity<Void> workQueue(@RequestBody BaseMessage<String> message) {
-        amqpTemplate.convertAndSend(QueueDeclare.WORK_QUEUE, message.getData());
+        rabbitTemplate.convertAndSend(QueueDeclare.WORK_QUEUE, message.getData());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
@@ -50,9 +55,9 @@ public class ProducerController {
     @ApiOperation("广播测试")
     public ResponseEntity<Void> fanoutQueue(@RequestBody CustomMessage message) {
         if (message.getAge() == 1) {
-            amqpTemplate.convertAndSend(ExchangeDeclare.FANOUT_EXCHANGE, "1", message);
+            rabbitTemplate.convertAndSend(ExchangeDeclare.FANOUT_EXCHANGE, "1", message);
         } else {
-            amqpTemplate.convertAndSend(ExchangeDeclare.FANOUT_EXCHANGE, "2", message);
+            rabbitTemplate.convertAndSend(ExchangeDeclare.FANOUT_EXCHANGE, "2", message);
         }
         return ResponseEntity.status(HttpStatus.OK).build();
     }
@@ -65,16 +70,16 @@ public class ProducerController {
     @ApiOperation("路由交换 direct route")
     public ResponseEntity<Void> directQueue(@RequestBody BaseMessage<String> message) {
         if (message.getTarget().equalsIgnoreCase("info")) {
-            amqpTemplate.convertAndSend(ExchangeDeclare.DIRECT_EXCHANGE, "info", message);
+            rabbitTemplate.convertAndSend(ExchangeDeclare.DIRECT_EXCHANGE, "info", message);
         }
         if (message.getTarget().equalsIgnoreCase("debug")) {
-            amqpTemplate.convertAndSend(ExchangeDeclare.DIRECT_EXCHANGE, "debug", message);
+            rabbitTemplate.convertAndSend(ExchangeDeclare.DIRECT_EXCHANGE, "debug", message);
         }
         if (message.getTarget().equalsIgnoreCase("warn")) {
-            amqpTemplate.convertAndSend(ExchangeDeclare.DIRECT_EXCHANGE, "warn", message);
+            rabbitTemplate.convertAndSend(ExchangeDeclare.DIRECT_EXCHANGE, "warn", message);
         }
         if (message.getTarget().equalsIgnoreCase("error")) {
-            amqpTemplate.convertAndSend(ExchangeDeclare.DIRECT_EXCHANGE, "error", message);
+            rabbitTemplate.convertAndSend(ExchangeDeclare.DIRECT_EXCHANGE, "error", message);
         }
         return ResponseEntity.status(HttpStatus.OK).build();
     }
@@ -83,18 +88,9 @@ public class ProducerController {
      * 通配 Topic
      */
     @PostMapping("actions/topic/")
-    @ApiOperation("路由交换")
+    @ApiOperation("通配 topic")
     public ResponseEntity<Void> topicQueue(@RequestBody BaseMessage<String> message) {
-        return ResponseEntity.status(HttpStatus.OK).build();
-    }
-
-    /**
-     * 复杂对象测试
-     */
-    @PostMapping("actions/custom-objects/")
-    @ApiOperation("路由交换")
-    public ResponseEntity<Void> customObject(@RequestBody CustomMessage message) {
-
+        rabbitTemplate.convertAndSend(ExchangeDeclare.TOPIC_EXCHANGE, message.getTarget(), message);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
@@ -102,17 +98,25 @@ public class ProducerController {
      * 死信队列测试
      */
     @PostMapping("actions/dead-letter/")
-    @ApiOperation("路由交换")
+    @ApiOperation("死信队列")
     public ResponseEntity<Void> deadLetter(@RequestBody BaseMessage<String> message) {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     /**
      * confirm 测试
+     * 向一个未声明的队列投递消息
      */
     @PostMapping("actions/publish-confirm/")
-    @ApiOperation("路由交换")
+    @ApiOperation("发布确认")
     public ResponseEntity<Void> publishConfirm(@RequestBody BaseMessage<String> message) {
+        CorrelationData crd = new CorrelationData();
+        var data = message.getData();
+        MessagePostProcessor messagePostProcessor = msg -> msg;
+        var routeKey = message.getTarget();
+        rabbitTemplate.convertAndSend("", routeKey, data, messagePostProcessor, crd);
+        var confirmCallback = new ConfirmCallback().setExchange("").setRouteKey(routeKey).setPayload(data).setMessagePostProcessor(null);
+        crd.getFuture().addCallback(confirmCallback);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
@@ -120,8 +124,9 @@ public class ProducerController {
      * tx 测试
      */
     @PostMapping("actions/tx/")
-    @ApiOperation("路由交换")
+    @ApiOperation("事务测试")
     public ResponseEntity<Void> txTest(@RequestBody BaseMessage<String> message) {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
 }

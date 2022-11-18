@@ -1,5 +1,6 @@
 package org.framework.integration.example.rabbit.producer.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionNameStrategy;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -15,18 +16,29 @@ import org.springframework.context.annotation.Configuration;
  *
  * @author zl
  */
+@Slf4j
 @Configuration
 public class AMQPConfig {
 
     @Value("${spring.application.name}")
     private String connectionName;
 
+    /**
+     * {@link <a href="https://docs.spring.io/spring-amqp/docs/current/reference/html/#json-message-converter">Jackson2JsonMessageConverter</a>}
+     */
     @Bean
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
         var rabbitTemplate = new RabbitTemplate(connectionFactory);
         var messageConverter = new Jackson2JsonMessageConverter();
         //        messageConverter.setClassMapper(); 支持指定class 集合(idClassMapping ) 支持指定默认type  @see DefaultClassMapper
         rabbitTemplate.setMessageConverter(messageConverter);
+        rabbitTemplate.setMandatory(true);
+        rabbitTemplate.setReturnsCallback(returnedMessage -> log.info("return callback : {}", returnedMessage));
+        rabbitTemplate.setConfirmCallback((correlationData, ack, cause) -> {
+            log.info("confirm callback correlationData : {}", correlationData);
+            log.info("confirm callback ack : {} ", ack);
+            log.info("confirm callback cause : {} ", cause);
+        });
         return rabbitTemplate;
     }
 
