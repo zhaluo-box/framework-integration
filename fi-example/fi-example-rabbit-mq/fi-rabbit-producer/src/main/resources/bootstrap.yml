@@ -22,6 +22,8 @@ spring:
           - application.${spring.cloud.nacos.config.file-extension}
           - shared-rabbit.${spring.cloud.nacos.config.file-extension}
 
+
+
 logging:
   file:
     name: /home/logs/${spring.application.name}/${spring.application.name}.log

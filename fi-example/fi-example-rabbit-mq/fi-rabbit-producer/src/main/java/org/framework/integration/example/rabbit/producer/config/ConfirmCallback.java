@@ -56,8 +56,10 @@ public class ConfirmCallback implements ListenableFutureCallback<CorrelationData
     public void onSuccess(CorrelationData.Confirm result) {
         assert result != null;
         if (result.isAck() && crd.getReturned() == null) {
-            log.info("Success received");
+            log.info("消息发送成功");
+            return;
         }
+        log.info("消息发送失败！return message ： {}", crd.getReturnedMessage());
     }
 
     public void retrySend(ConfirmCallback callback) {

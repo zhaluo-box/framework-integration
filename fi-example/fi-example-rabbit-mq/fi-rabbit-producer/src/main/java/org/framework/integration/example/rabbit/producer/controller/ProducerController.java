@@ -14,6 +14,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.concurrent.ListenableFutureCallback;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -114,9 +115,21 @@ public class ProducerController {
         var data = message.getData();
         MessagePostProcessor messagePostProcessor = msg -> msg;
         var routeKey = message.getTarget();
-        rabbitTemplate.convertAndSend("", routeKey, data, messagePostProcessor, crd);
-        var confirmCallback = new ConfirmCallback().setExchange("").setRouteKey(routeKey).setPayload(data).setMessagePostProcessor(null);
-        crd.getFuture().addCallback(confirmCallback);
+        rabbitTemplate.convertAndSend(message.getSource(), routeKey, data, messagePostProcessor, crd);
+        var confirmCallback = new ConfirmCallback().setExchange(message.getSource()).setRouteKey(routeKey).setPayload(data).setMessagePostProcessor(null);
+        crd.getFuture().addCallback(new ListenableFutureCallback<CorrelationData.Confirm>() {
+            @Override
+            public void onFailure(Throwable ex) {
+                log.error("【回调】消息发送失败： {}", ex.getMessage());
+            }
+
+            @Override
+            public void onSuccess(CorrelationData.Confirm result) {
+                log.info("【成功回调】: ACK : {}", result.isAck());
+                log.info("【成功回调】: Reason: {}", result.getReason());
+                log.info("【成功回调】 CRD : {}", crd);
+            }
+        });
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 

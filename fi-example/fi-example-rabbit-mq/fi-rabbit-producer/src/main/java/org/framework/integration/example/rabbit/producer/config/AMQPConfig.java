@@ -32,7 +32,7 @@ public class AMQPConfig {
         var messageConverter = new Jackson2JsonMessageConverter();
         //        messageConverter.setClassMapper(); 支持指定class 集合(idClassMapping ) 支持指定默认type  @see DefaultClassMapper
         rabbitTemplate.setMessageConverter(messageConverter);
-        rabbitTemplate.setMandatory(true);
+        //        rabbitTemplate.setMandatory(true); 支持yml配置 查看nacos
         rabbitTemplate.setReturnsCallback(returnedMessage -> log.info("return callback : {}", returnedMessage));
         rabbitTemplate.setConfirmCallback((correlationData, ack, cause) -> {
             log.info("confirm callback correlationData : {}", correlationData);
