@@ -15,37 +15,37 @@ import java.util.concurrent.TimeUnit;
  * @author wmz
  */
 @Slf4j
-public abstract class AbstractQueueTest {
+public class AbstractQueueTest {
 
-    protected static final String SIMPLE_QUEUE = "test:simple:queue";
+    public static final String SIMPLE_QUEUE = "test:simple:queue";
 
-    protected static final String WORK_QUEUE = "test:work:queue";
+    public static final String WORK_QUEUE = "test:work:queue";
 
-    protected static final String DIRECT_QUEUE = "test:direct:queue";
+    public static final String DIRECT_QUEUE = "test:direct:queue";
 
-    protected static final String TOPIC_QUEUE = "test:topic:queue";
+    public static final String TOPIC_QUEUE = "test:topic:queue";
 
-    protected static final String RPC_QUEUE = "test:rpc:queue";
+    public static final String RPC_QUEUE = "test:rpc:queue";
 
-    protected static final String PUBLISH_SUBSCRIBE_QUEUE = "test:publish:subscribe:queue";
+    public static final String PUBLISH_SUBSCRIBE_QUEUE = "test:publish:subscribe:queue";
 
-    protected static final String PUBLISH_CONFIRM_QUEUE = "test:publish:confirm:queue";
+    public static final String PUBLISH_CONFIRM_QUEUE = "test:publish:confirm:queue";
 
     /**
      * 交换机 : 广播
      */
-    protected static final String EXCHANGE_FANOUT_NAME = "test:exchange:fanout";
+    public static final String EXCHANGE_FANOUT_NAME = "test:exchange:fanout";
 
     /**
      * 交换机 : 路由
      */
-    protected static final String EXCHANGE_ROUTE_NAME = "test:exchange:route";
+    public static final String EXCHANGE_ROUTE_NAME = "test:exchange:route";
 
-    protected static final String EXCHANGE_TOPIC_NAME = "test:exchange:topic";
+    public static final String EXCHANGE_TOPIC_NAME = "test:exchange:topic";
 
-    protected static final String EXCHANGE_DIRECT_NAME = "test:exchange:direct";
+    public static final String EXCHANGE_DIRECT_NAME = "test:exchange:direct";
 
-    protected static void consumer(String queue, String consumerName, boolean sleep) throws Exception {
+    public static void consumer(String queue, String consumerName, boolean sleep) throws Exception {
         var connection = RabbitConnectFactory.getConnection();
         var channel = connection.createChannel();
         // durable ： 持久化
@@ -69,7 +69,7 @@ public abstract class AbstractQueueTest {
         channel.basicConsume(queue, false, deliverCallback, System.out::println);
     }
 
-    protected static void doWork() {
+    public static void doWork() {
         try {
             TimeUnit.SECONDS.sleep(2);
         } catch (InterruptedException ignored) {
@@ -78,7 +78,7 @@ public abstract class AbstractQueueTest {
     }
 
     @SneakyThrows
-    protected static void consumer(String queue, String consumerName, String exchangeName, String... routeKey) {
+    public static void consumer(String queue, String consumerName, String exchangeName, String... routeKey) {
         Assert.isTrue(routeKey != null, "路由Key不能为null");
         var connection = RabbitConnectFactory.getConnection();
         var channel = connection.createChannel();

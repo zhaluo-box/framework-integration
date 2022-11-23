@@ -43,12 +43,10 @@ public class ConfirmCallback implements ListenableFutureCallback<CorrelationData
     public void onFailure(Throwable ex) {
         log.info("Failure received {}", ex.getMessage());
         log.info("重试发送");
-
-        //            do {
-        //                retrySend(this);
-        //                x.getAndAdd(1);
-        //            } while (x.get() < 5);
-
+        do {
+            retrySend(this);
+            x.getAndAdd(1);
+        } while (x.get() < 5);
         throw new RuntimeException("抛出异常，让整个外围事务回滚");
     }
 
@@ -59,7 +57,7 @@ public class ConfirmCallback implements ListenableFutureCallback<CorrelationData
             log.info("消息发送成功");
             return;
         }
-        log.info("消息发送失败！return message ： {}", crd.getReturnedMessage());
+        log.info("消息发送失败！return message ： {}", crd.getReturned());
     }
 
     public void retrySend(ConfirmCallback callback) {

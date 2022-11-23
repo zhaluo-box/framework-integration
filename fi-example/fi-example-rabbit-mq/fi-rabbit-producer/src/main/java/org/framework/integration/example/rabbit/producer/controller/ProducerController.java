@@ -8,6 +8,7 @@ import org.framework.integration.example.common.constant.QueueDeclare;
 import org.framework.integration.example.common.dto.BaseMessage;
 import org.framework.integration.example.rabbit.producer.config.ConfirmCallback;
 import org.framework.integration.example.rabbit.producer.entity.CustomMessage;
+import org.framework.integration.example.rabbit.producer.service.MessagePublishService;
 import org.springframework.amqp.core.MessagePostProcessor;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -31,6 +32,9 @@ public class ProducerController {
 
     @Autowired
     private RabbitTemplate rabbitTemplate;
+
+    @Autowired
+    private MessagePublishService messagePublishService;
 
     /**
      * 简单队列测试 走系统默认队列 routeKey 就队列名称即可
@@ -96,15 +100,6 @@ public class ProducerController {
     }
 
     /**
-     * 死信队列测试
-     */
-    @PostMapping("actions/dead-letter/")
-    @ApiOperation("死信队列")
-    public ResponseEntity<Void> deadLetter(@RequestBody BaseMessage<String> message) {
-        return ResponseEntity.status(HttpStatus.OK).build();
-    }
-
-    /**
      * confirm 测试
      * 向一个未声明的队列投递消息
      */
@@ -139,6 +134,16 @@ public class ProducerController {
     @PostMapping("actions/tx/")
     @ApiOperation("事务测试")
     public ResponseEntity<Void> txTest(@RequestBody BaseMessage<String> message) {
+        messagePublishService.txView(message);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    /**
+     * 死信队列测试
+     */
+    @PostMapping("actions/dead-letter/")
+    @ApiOperation("死信队列")
+    public ResponseEntity<Void> deadLetter(@RequestBody BaseMessage<String> message) {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 

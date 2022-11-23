@@ -1,6 +1,7 @@
 package org.framework.integration.example.rabbit.producer.entity;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.math.BigDecimal;
 
@@ -10,6 +11,7 @@ import java.math.BigDecimal;
  * @author zl
  */
 @Data
+@Accessors(chain = true)
 public class CustomMessage {
 
     private String name;
