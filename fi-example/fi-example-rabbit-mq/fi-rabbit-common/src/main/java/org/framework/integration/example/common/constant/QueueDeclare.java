@@ -21,11 +21,10 @@ public interface QueueDeclare {
     String TOPIC_QUEUE3 = "fi:example:topic-queue3";
     String TOPIC_QUEUE4 = "fi:example:topic-queue4";
 
-    String RPC_QUEUE = "fi:example:rpc-queue";
-
-    String PUBLISH_SUBSCRIBE_QUEUE = "fi:example:publish-subscribe-queue";
-
-    String PUBLISH_CONFIRM_QUEUE = "fi:example:publish-confirm-queue";
     String ABSTRACT_MESSAGE_QUEUE = "fi:example:abstract-message-queue";
     String ABSTRACT_MESSAGE_QUEUE_2 = "fi:example:abstract-message-queue-2";
+
+    String DIRECT_QUEUE_D = "fi:example:direct-queue-d";
+
+    String DIRECT_QUEUE_DLX = "fi:example:direct-queue-dlx";
 }

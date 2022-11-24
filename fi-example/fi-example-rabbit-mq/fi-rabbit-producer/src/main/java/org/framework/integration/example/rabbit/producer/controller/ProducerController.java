@@ -158,12 +158,14 @@ public class ProducerController {
     /**
      * 死信队列测试
      */
-    @PostMapping("actions/dead-letter/")
     @ApiOperation("死信队列")
-    public ResponseEntity<Void> deadLetter(@RequestBody BaseMessage<String> message) {
+    @PostMapping("actions/dead-letter/")
+    public ResponseEntity<Void> deadLetter(@RequestBody CustomMessage message) {
+        rabbitTemplate.convertAndSend(ExchangeDeclare.DIRECT_EXCHANGE_D, "d", message);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
+    @ApiOperation("批量发送")
     @PostMapping("actions/batch-send/")
     public ResponseEntity<Void> batchSend(@RequestBody List<CustomMessage> messageList) {
         messagePublishService.txBatchSend(messageList);

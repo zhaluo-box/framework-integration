@@ -16,4 +16,7 @@ public interface ExchangeDeclare {
     String TOPIC_EXCHANGE = "fi:example:topic-exchange";
 
     String DIRECT_EXCHANGE = "fi:example:direct-exchange";
+    String DIRECT_EXCHANGE_D = "fi:example:direct-exchange-d";
+
+    String TOPIC_EXCHANGE_DLX = "fi:example:topic-exchange-dlx";
 }

@@ -12,6 +12,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.handler.annotation.support.DefaultMessageHandlerMethodFactory;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * AMQP 配置 主要配置一些 队列与交换机的关系
  * 简单队列与高级队列与交换机的关系都需要在这里维护
@@ -123,4 +126,52 @@ public class AMQPConfig implements RabbitListenerConfigurer {
     public Queue abstractMessageQueue2() {
         return new Queue(QueueDeclare.ABSTRACT_MESSAGE_QUEUE_2);
     }
+
+    /**
+     * 私信测试队列
+     */
+    @Bean
+    public Queue directQueueD() {
+        Map<String, Object> args = new HashMap<>(2);
+        // x-dead-letter-exchange    这里声明当前队列绑定的死信交换机
+        args.put("x-dead-letter-exchange", ExchangeDeclare.TOPIC_EXCHANGE_DLX);
+        // x-dead-letter-routing-key  这里声明当前队列的死信路由key
+        args.put("x-dead-letter-routing-key", "dlx");
+        return new Queue(QueueDeclare.DIRECT_QUEUE_D, true, false, false, args);
+    }
+
+    /**
+     * 死信队列
+     */
+    @Bean
+    public Queue dlxQueue() {
+        return new Queue(QueueDeclare.DIRECT_QUEUE_DLX);
+    }
+
+    /**
+     * 私信测试交换机
+     */
+    @Bean
+    public DirectExchange directExchangeD() {
+        return ExchangeBuilder.directExchange(ExchangeDeclare.DIRECT_EXCHANGE_D).durable(true).build();
+    }
+
+    /**
+     * 死信交换机
+     */
+    @Bean
+    public TopicExchange directExchangeDLX() {
+        return ExchangeBuilder.topicExchange(ExchangeDeclare.TOPIC_EXCHANGE_DLX).durable(true).build();
+    }
+
+    @Bean
+    public Binding dBind() {
+        return BindingBuilder.bind(directQueueD()).to(directExchangeD()).with("d");
+    }
+
+    @Bean
+    public Binding dlxBind() {
+        return BindingBuilder.bind(dlxQueue()).to(directExchangeDLX()).with("dlx");
+    }
+
 }

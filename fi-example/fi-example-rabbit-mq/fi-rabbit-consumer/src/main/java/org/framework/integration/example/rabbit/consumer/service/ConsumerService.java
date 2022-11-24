@@ -1,7 +1,6 @@
 package org.framework.integration.example.rabbit.consumer.service;
 
 import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.MessageProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.framework.integration.example.common.constant.ExchangeDeclare;
 import org.framework.integration.example.common.constant.QueueDeclare;
@@ -17,6 +16,7 @@ import org.springframework.amqp.support.AmqpHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -104,19 +104,19 @@ public class ConsumerService {
 
     @RabbitListener(bindings = @QueueBinding(value = @Queue(value = QueueDeclare.TOPIC_QUEUE4), exchange = @Exchange(value = ExchangeDeclare.TOPIC_EXCHANGE, type = ExchangeTypes.TOPIC), key = {
                     "topic.*" }))
-    public void topicLogLister(@Payload BaseMessage<String> message, MessageProperties messageProperties) {
+    public void topicLogLister(@Payload BaseMessage<String> message) {
         log.error(" **********  topic-queue 测试 * {}", message);
     }
 
     @RabbitListener(bindings = @QueueBinding(value = @Queue(value = QueueDeclare.TOPIC_QUEUE1), exchange = @Exchange(value = ExchangeDeclare.TOPIC_EXCHANGE, type = ExchangeTypes.TOPIC), key = {
                     "topic.#" }))
-    public void topicLogLister2(@Payload BaseMessage<String> message, MessageProperties messageProperties) {
+    public void topicLogLister2(@Payload BaseMessage<String> message) {
         log.warn(" ############  topic-queue 测试 # {}", message);
     }
 
     @RabbitListener(bindings = @QueueBinding(value = @Queue(value = QueueDeclare.TOPIC_QUEUE2), exchange = @Exchange(value = ExchangeDeclare.TOPIC_EXCHANGE, type = ExchangeTypes.TOPIC), key = {
                     "topic.info" }))
-    public void topicLogLister3(@Payload BaseMessage<String> message, MessageProperties messageProperties) {
+    public void topicLogLister3(@Payload BaseMessage<String> message) {
         log.info(" iiiiiiiiiiii  topic-queue 测试 info {}", message);
     }
 
@@ -127,19 +127,19 @@ public class ConsumerService {
      */
     @RabbitListener(bindings = @QueueBinding(value = @Queue(value = QueueDeclare.TOPIC_QUEUE3), exchange = @Exchange(value = ExchangeDeclare.TOPIC_EXCHANGE, type = ExchangeTypes.TOPIC), key = {
                     "topic.debug" }))
-    public void topicLogLister4(@Payload BaseMessage<String> message, MessageProperties messageProperties) {
+    public void topicLogLister4(@Payload BaseMessage<String> message) {
         log.debug(" ddddddddddd topic-queue 测试 debug {}", message);
     }
 
     @RabbitListener(bindings = @QueueBinding(value = @Queue(value = QueueDeclare.TOPIC_QUEUE3), exchange = @Exchange(value = ExchangeDeclare.TOPIC_EXCHANGE, type = ExchangeTypes.TOPIC), key = {
                     "*.*" }))
-    public void topicLogLister5(@Payload BaseMessage<String> message, MessageProperties messageProperties) {
+    public void topicLogLister5(@Payload BaseMessage<String> message) {
         log.debug(" *.* topic-queue 测试  {}", message);
     }
 
     @RabbitListener(bindings = @QueueBinding(value = @Queue(value = QueueDeclare.TOPIC_QUEUE3), exchange = @Exchange(value = ExchangeDeclare.TOPIC_EXCHANGE, type = ExchangeTypes.TOPIC), key = {
                     "*.*.*" }))
-    public void topicLogLister6(@Payload BaseMessage<String> message, MessageProperties messageProperties) {
+    public void topicLogLister6(@Payload BaseMessage<String> message) {
         log.debug(" *.*.* topic-queue 测试  {}", message);
     }
 
@@ -153,14 +153,39 @@ public class ConsumerService {
         log.info("abstract message : {}", message);
     }
 
-    // TODO @wmz 2022/11/23 定义死信队列
-    public void manualAck(CustomMessage message, Channel channel, @Header(AmqpHeaders.DELIVERY_TAG) long tag) throws IOException {
+    /**
+     * sendTo 可以转发给一个简单的队列
+     */
+    @RabbitListener(queues = QueueDeclare.DIRECT_QUEUE_D, ackMode = "MANUAL")
+    @SendTo(QueueDeclare.SIMPLE_QUEUE)
+    public String manualAck(CustomMessage message, Channel channel, @Header(AmqpHeaders.DELIVERY_TAG) long tag) throws IOException {
         try {
-            System.out.println("message = " + message);
-            channel.basicAck(tag, true);
+            System.out.println(" message = " + message);
+            if (message.getAge() > 10) {
+                throw new RuntimeException(" Ack Test Exception ");
+            }
+            /*
+             * 第一个参数，消息的标识
+             * RabbitMQ 推送消息给 Consumer 时,会附带一个 Delivery Tag，以便 Consumer可以在消息确认时告诉 RabbitMQ 到底是哪条消息被确认了;
+             * 第二个参数 multiple 取值为 false 时，表示通知 RabbitMQ 当前消息被确认；
+             * 如果为 true，则额外将比第一个参数指定的 delivery tag 小的消息一并确认。
+             */
+            channel.basicAck(tag, false);
+            return " sendTo : " + message.getName();
+
         } catch (Exception e) {
-            log.info("消息消费失败 : {}", message);
-            channel.basicNack(tag, false, true);
+            log.error(e.getMessage(), e);
+            log.info(" 消息消费失败 : {} ", message);
+            /*
+             * 第一个参数，消息的标识
+             * 第二个参数是否批量处理消息,true:将一次性拒绝所有小于deliveryTag的消息。
+             * 第三个参数，消息是否重入队列，false将消息存队列删除,如果绑定了死信队列会被投递到死信队列。true:消息被投递到堆列尾部，容易死循环，不建议,而且阻塞后续的队列
+             *
+             * 123 4（nack） 44444
+             */
+            channel.basicNack(tag, false, false);
+            //            channel.basicReject(tag, false); 一次性只能拒绝一条 requeue
+            throw new RuntimeException("message is nack ");
         }
     }
 }
