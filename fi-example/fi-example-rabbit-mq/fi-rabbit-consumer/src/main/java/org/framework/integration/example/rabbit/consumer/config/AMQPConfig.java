@@ -25,7 +25,36 @@ public class AMQPConfig implements RabbitListenerConfigurer {
     @Value("${spring.application.name}")
     private String connectionName;
 
-    // TODO @zl  2022-11-17 消息转换器的定义
+    //    @Bean
+    //    public SimpleRabbitListenerContainerFactory rabbitListenerContainerFactory(ConnectionFactory connectionFactory) {
+    //        SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
+    //        var objectMapper = new ObjectMapper();
+    //        /*
+    //        Jackson2JsonMessageConverter 一个json 序列化转换器，但是只能转换当前程序下的数据 适合严格的数据管理
+    //        通过建立idClassMapping 来建立 _typeId_ 与当前程序下Class的转换，
+
+    //         */
+    //        var messageConverter = new Jackson2JsonMessageConverter(objectMapper);
+    //        messageConverter.setClassMapper(classMapper());
+    //        // 主要针对抽象类，例如List abstractObject 忽略_typeId_
+    //        messageConverter.setAlwaysConvertToInferredType(true);
+    //        factory.setMessageConverter(messageConverter);
+    //        factory.setConnectionFactory(connectionFactory);
+    //        return factory;
+    //    }
+    //
+    //    @Bean
+    //    public ClassMapper classMapper() {
+    //        var classMapper = new DefaultJackson2JavaTypeMapper();
+    //        classMapper.setTrustedPackages("*"); // 可以设置相信的包， DefaultJackson2JavaTypeMapper  默认只新人 java.util 与Java.lang
+    //        var idClassMapping = new HashMap<String, Class<?>>();
+    //        idClassMapping.put("org.framework.integration.example.rabbit.producer.entity.CustomMessage", CustomMessage.class);
+    //        idClassMapping.put("org.framework.integration.example.rabbit.producer.entity.SubMessage", AbstractMessage.class);
+    //        classMapper.setIdClassMapping(idClassMapping);
+    //        return classMapper;
+    //    }
+
+    //  implements RabbitListenerConfigurer need override follow method
 
     @Bean
     public DefaultMessageHandlerMethodFactory myHandlerMethodFactory() {
@@ -83,5 +112,15 @@ public class AMQPConfig implements RabbitListenerConfigurer {
     @Bean
     public Binding directBindingError() {
         return BindingBuilder.bind(directQueue()).to(directExchange()).with("error");
+    }
+
+    @Bean
+    public Queue abstractMessageQueue() {
+        return new Queue(QueueDeclare.ABSTRACT_MESSAGE_QUEUE);
+    }
+
+    @Bean
+    public Queue abstractMessageQueue2() {
+        return new Queue(QueueDeclare.ABSTRACT_MESSAGE_QUEUE_2);
     }
 }

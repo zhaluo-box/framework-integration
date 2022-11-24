@@ -26,4 +26,6 @@ public interface QueueDeclare {
     String PUBLISH_SUBSCRIBE_QUEUE = "fi:example:publish-subscribe-queue";
 
     String PUBLISH_CONFIRM_QUEUE = "fi:example:publish-confirm-queue";
+    String ABSTRACT_MESSAGE_QUEUE = "fi:example:abstract-message-queue";
+    String ABSTRACT_MESSAGE_QUEUE_2 = "fi:example:abstract-message-queue-2";
 }

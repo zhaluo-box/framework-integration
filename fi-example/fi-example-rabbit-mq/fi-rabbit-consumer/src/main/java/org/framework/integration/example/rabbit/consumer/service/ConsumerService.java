@@ -7,15 +7,20 @@ import org.framework.integration.example.common.constant.ExchangeDeclare;
 import org.framework.integration.example.common.constant.QueueDeclare;
 import org.framework.integration.example.common.dto.BaseMessage;
 import org.framework.integration.example.rabbit.consumer.entity.CustomMessage;
+import org.framework.integration.example.rabbit.consumer.entity.SubMessage;
 import org.springframework.amqp.core.ExchangeTypes;
 import org.springframework.amqp.rabbit.annotation.Exchange;
 import org.springframework.amqp.rabbit.annotation.Queue;
 import org.springframework.amqp.rabbit.annotation.QueueBinding;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.support.AmqpHeaders;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -86,14 +91,13 @@ public class ConsumerService {
      * @see ExchangeTypes
      */
     @RabbitListener(bindings = @QueueBinding(value = @Queue(value = QueueDeclare.FANOUT_QUEUE1), exchange = @Exchange(value = ExchangeDeclare.FANOUT_EXCHANGE, type = ExchangeTypes.FANOUT), key = "1"))
-    public void fanoutLister(@Payload CustomMessage customMessage, MessageProperties messageProperties, Channel channel, @Headers Map<String, Object> headers) {
+    public void fanoutLister(@Payload CustomMessage customMessage, @Headers Map<String, Object> headers) {
         log.warn("message headers : {}", headers);
         log.info("自定义对象消费与fanout(广播)1 ： {} ", customMessage);
     }
 
     @RabbitListener(bindings = @QueueBinding(value = @Queue(value = QueueDeclare.FANOUT_QUEUE2), exchange = @Exchange(value = ExchangeDeclare.FANOUT_EXCHANGE, type = ExchangeTypes.FANOUT), key = "2"))
-    public void fanoutLister2(@Payload CustomMessage customMessage, MessageProperties messageProperties, Channel channel,
-                              @Headers Map<String, Object> headers) {
+    public void fanoutLister2(@Payload CustomMessage customMessage, @Headers Map<String, Object> headers) {
         log.warn("message headers : {}", headers);
         log.error("自定义对象消费与fanout(广播)2 ： {} ", customMessage);
     }
@@ -137,5 +141,26 @@ public class ConsumerService {
                     "*.*.*" }))
     public void topicLogLister6(@Payload BaseMessage<String> message, MessageProperties messageProperties) {
         log.debug(" *.*.* topic-queue 测试  {}", message);
+    }
+
+    @RabbitListener(queues = QueueDeclare.ABSTRACT_MESSAGE_QUEUE)
+    public void abstractMessageListener(@Payload List<CustomMessage> message) {
+        log.info("abstract message : {}", message);
+    }
+
+    @RabbitListener(queues = QueueDeclare.ABSTRACT_MESSAGE_QUEUE_2)
+    public void abstractMessageListener(@Payload SubMessage message) {
+        log.info("abstract message : {}", message);
+    }
+
+    // TODO @wmz 2022/11/23 定义死信队列
+    public void manualAck(CustomMessage message, Channel channel, @Header(AmqpHeaders.DELIVERY_TAG) long tag) throws IOException {
+        try {
+            System.out.println("message = " + message);
+            channel.basicAck(tag, true);
+        } catch (Exception e) {
+            log.info("消息消费失败 : {}", message);
+            channel.basicNack(tag, false, true);
+        }
     }
 }

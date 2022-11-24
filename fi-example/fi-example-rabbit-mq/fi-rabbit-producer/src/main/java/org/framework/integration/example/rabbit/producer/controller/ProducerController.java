@@ -8,6 +8,7 @@ import org.framework.integration.example.common.constant.QueueDeclare;
 import org.framework.integration.example.common.dto.BaseMessage;
 import org.framework.integration.example.rabbit.producer.config.ConfirmCallback;
 import org.framework.integration.example.rabbit.producer.entity.CustomMessage;
+import org.framework.integration.example.rabbit.producer.entity.SubMessage;
 import org.framework.integration.example.rabbit.producer.service.MessagePublishService;
 import org.springframework.amqp.core.MessagePostProcessor;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
@@ -19,6 +20,8 @@ import org.springframework.util.concurrent.ListenableFutureCallback;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * Created  on 2022/9/23 10:10:31
@@ -138,12 +141,32 @@ public class ProducerController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
+    @ApiOperation("抽象类发送测试1")
+    @PostMapping("actions/abstract-messages-1/")
+    public ResponseEntity<Void> abstractMessage(@RequestBody List<CustomMessage> messageList) {
+        rabbitTemplate.convertAndSend(QueueDeclare.ABSTRACT_MESSAGE_QUEUE, messageList);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @ApiOperation("抽象类发送测试2")
+    @PostMapping("actions/abstract-messages-2/")
+    public ResponseEntity<Void> abstractMessage(@RequestBody SubMessage message) {
+        rabbitTemplate.convertAndSend(QueueDeclare.ABSTRACT_MESSAGE_QUEUE_2, message);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
     /**
      * 死信队列测试
      */
     @PostMapping("actions/dead-letter/")
     @ApiOperation("死信队列")
     public ResponseEntity<Void> deadLetter(@RequestBody BaseMessage<String> message) {
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @PostMapping("actions/batch-send/")
+    public ResponseEntity<Void> batchSend(@RequestBody List<CustomMessage> messageList) {
+        messagePublishService.txBatchSend(messageList);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
