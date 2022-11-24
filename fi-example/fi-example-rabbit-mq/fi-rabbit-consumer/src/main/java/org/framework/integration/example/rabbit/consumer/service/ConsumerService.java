@@ -180,8 +180,8 @@ public class ConsumerService {
              * 第一个参数，消息的标识
              * 第二个参数是否批量处理消息,true:将一次性拒绝所有小于deliveryTag的消息。
              * 第三个参数，消息是否重入队列，false将消息存队列删除,如果绑定了死信队列会被投递到死信队列。true:消息被投递到堆列尾部，容易死循环，不建议,而且阻塞后续的队列
-             *
-             * 123 4（nack） 44444
+             * 123456
+             * 123 4（nack） 44444... 4(ack)56
              */
             channel.basicNack(tag, false, false);
             //            channel.basicReject(tag, false); 一次性只能拒绝一条 requeue
@@ -189,3 +189,30 @@ public class ConsumerService {
         }
     }
 }
+
+//    /**
+//     * 经过测试 argument 定义的死信队列没有被创建，还是需要自己定义，
+//     * 但是可以减少一部分定义，建议队列与交换机的绑定关系，写在一起
+//     */
+//    // @formatter:off
+//    @RabbitListener(bindings = @QueueBinding(value = @Queue(value = "d-queue", autoDelete = "true",
+//                    arguments = {
+//                        @Argument(name = "x-dead-letter-exchange", value = "dlx-temp"),
+//                        @Argument(name="x-dead-letter-routing-key",value = "dlx")}),
+//                    exchange = @Exchange(value = "d-tmp",autoDelete = "true"),key = "d"),  ackMode = "MANUAL")
+//    // @formatter:on
+//    public String manualAck2(CustomMessage message, Channel channel, @Header(AmqpHeaders.DELIVERY_TAG) long tag) throws IOException {
+//        try {
+//            if (message.getAge() > 10) {
+//                throw new RuntimeException(" Ack Test Exception ");
+//            }
+//            channel.basicAck(tag, false);
+//            log.info("message : {} ", message);
+//            return " sendTo : " + message.getName();
+//        } catch (Exception e) {
+//            log.error(e.getMessage(), e);
+//            log.info(" 消息消费失败 : {} ", message);
+//            channel.basicNack(tag, true, false);
+//            throw new RuntimeException("message is nack ");
+//        }
+//    }
