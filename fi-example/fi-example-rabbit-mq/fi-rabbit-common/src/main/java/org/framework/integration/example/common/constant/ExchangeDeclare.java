@@ -7,10 +7,6 @@ package org.framework.integration.example.common.constant;
  */
 public interface ExchangeDeclare {
 
-    String WORK_EXCHANGE = "fi:example:work-queue-exchange";
-
-    String SIMPLE_EXCHANGE = "fi:example:simple-queue-exchange";
-
     String FANOUT_EXCHANGE = "fi:example:fanout-exchange";
 
     String TOPIC_EXCHANGE = "fi:example:topic-exchange";
@@ -19,4 +15,6 @@ public interface ExchangeDeclare {
     String DIRECT_EXCHANGE_D = "fi:example:direct-exchange-d";
 
     String TOPIC_EXCHANGE_DLX = "fi:example:topic-exchange-dlx";
+
+    String DIRECT_BATCH_EXCHANGE = "fi:example:direct-batch-exchange";
 }

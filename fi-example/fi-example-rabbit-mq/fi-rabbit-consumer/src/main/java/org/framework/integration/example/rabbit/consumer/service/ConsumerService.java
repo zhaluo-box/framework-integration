@@ -13,6 +13,7 @@ import org.springframework.amqp.rabbit.annotation.Queue;
 import org.springframework.amqp.rabbit.annotation.QueueBinding;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.support.AmqpHeaders;
+import org.springframework.messaging.Message;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -187,6 +188,39 @@ public class ConsumerService {
             //            channel.basicReject(tag, false); 一次性只能拒绝一条 requeue
             throw new RuntimeException("message is nack ");
         }
+    }
+
+    @RabbitListener(ackMode = "MANUAL", bindings = @QueueBinding(key = {
+                    "batch" }, value = @Queue(value = QueueDeclare.DIRECT_BATCH_QUEUE), exchange = @Exchange(value = ExchangeDeclare.DIRECT_BATCH_EXCHANGE)))
+    public void batchListener(@Payload List<Message<CustomMessage>> messages, Channel channel) {
+
+        var tags = messages.stream().map(msg -> {
+            var headers = msg.getHeaders();
+            return headers.get(AmqpHeaders.DELIVERY_TAG, Long.class);
+        }).toList();
+
+        try {
+            messages.forEach(msg -> System.out.println("payload = " + msg.getPayload()));
+            tags.forEach(tag -> {
+                try {
+                    channel.basicAck(tag, false);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            });
+
+        } catch (Exception e) {
+            log.error("消费异常 : {}", e.getMessage());
+            tags.forEach(tag -> {
+                try {
+                    channel.basicReject(tag, false);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            });
+            throw new RuntimeException(e.getMessage(), e);
+        }
+
     }
 }
 

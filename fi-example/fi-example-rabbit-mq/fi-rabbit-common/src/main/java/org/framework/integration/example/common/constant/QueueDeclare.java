@@ -27,4 +27,7 @@ public interface QueueDeclare {
     String DIRECT_QUEUE_D = "fi:example:direct-queue-d";
 
     String DIRECT_QUEUE_DLX = "fi:example:direct-queue-dlx";
+    
+    String DIRECT_BATCH_QUEUE = "fi:example:direct-batch-queue";
+
 }

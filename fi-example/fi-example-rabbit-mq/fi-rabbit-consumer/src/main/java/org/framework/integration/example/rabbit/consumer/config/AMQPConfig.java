@@ -4,6 +4,8 @@ import org.framework.integration.example.common.constant.ExchangeDeclare;
 import org.framework.integration.example.common.constant.QueueDeclare;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.annotation.RabbitListenerConfigurer;
+import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionNameStrategy;
 import org.springframework.amqp.rabbit.listener.RabbitListenerEndpointRegistrar;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,36 +30,13 @@ public class AMQPConfig implements RabbitListenerConfigurer {
     @Value("${spring.application.name}")
     private String connectionName;
 
-    //    @Bean
-    //    public SimpleRabbitListenerContainerFactory rabbitListenerContainerFactory(ConnectionFactory connectionFactory) {
-    //        SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
-    //        var objectMapper = new ObjectMapper();
-    //        /*
-    //        Jackson2JsonMessageConverter 一个json 序列化转换器，但是只能转换当前程序下的数据 适合严格的数据管理
-    //        通过建立idClassMapping 来建立 _typeId_ 与当前程序下Class的转换，
-
-    //         */
-    //        var messageConverter = new Jackson2JsonMessageConverter(objectMapper);
-    //        messageConverter.setClassMapper(classMapper());
-    //        // 主要针对抽象类，例如List abstractObject 忽略_typeId_
-    //        messageConverter.setAlwaysConvertToInferredType(true);
-    //        factory.setMessageConverter(messageConverter);
-    //        factory.setConnectionFactory(connectionFactory);
-    //        return factory;
-    //    }
-    //
-    //    @Bean
-    //    public ClassMapper classMapper() {
-    //        var classMapper = new DefaultJackson2JavaTypeMapper();
-    //        classMapper.setTrustedPackages("*"); // 可以设置相信的包， DefaultJackson2JavaTypeMapper  默认只新人 java.util 与Java.lang
-    //        var idClassMapping = new HashMap<String, Class<?>>();
-    //        idClassMapping.put("org.framework.integration.example.rabbit.producer.entity.CustomMessage", CustomMessage.class);
-    //        idClassMapping.put("org.framework.integration.example.rabbit.producer.entity.SubMessage", AbstractMessage.class);
-    //        classMapper.setIdClassMapping(idClassMapping);
-    //        return classMapper;
-    //    }
-
-    //  implements RabbitListenerConfigurer need override follow method
+    @Bean
+    public SimpleRabbitListenerContainerFactory rabbitListenerContainerFactory(ConnectionFactory connectionFactory) {
+        SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
+        factory.setConnectionFactory(connectionFactory);
+        factory.setBatchListener(true);
+        return factory;
+    }
 
     @Bean
     public DefaultMessageHandlerMethodFactory myHandlerMethodFactory() {
@@ -175,3 +154,32 @@ public class AMQPConfig implements RabbitListenerConfigurer {
     }
 
 }
+
+//    @Bean
+//    public SimpleRabbitListenerContainerFactory rabbitListenerContainerFactory(ConnectionFactory connectionFactory) {
+//        SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
+//        var objectMapper = new ObjectMapper();
+//        /*
+//        Jackson2JsonMessageConverter 一个json 序列化转换器，但是只能转换当前程序下的数据 适合严格的数据管理
+//        通过建立idClassMapping 来建立 _typeId_ 与当前程序下Class的转换，
+
+//         */
+//        var messageConverter = new Jackson2JsonMessageConverter(objectMapper);
+//        messageConverter.setClassMapper(classMapper());
+//        // 主要针对抽象类，例如List abstractObject 忽略_typeId_
+//        messageConverter.setAlwaysConvertToInferredType(true);
+//        factory.setMessageConverter(messageConverter);
+//        factory.setConnectionFactory(connectionFactory);
+//        return factory;
+//    }
+//
+//    @Bean
+//    public ClassMapper classMapper() {
+//        var classMapper = new DefaultJackson2JavaTypeMapper();
+//        classMapper.setTrustedPackages("*"); // 可以设置相信的包， DefaultJackson2JavaTypeMapper  默认只新人 java.util 与Java.lang
+//        var idClassMapping = new HashMap<String, Class<?>>();
+//        idClassMapping.put("org.framework.integration.example.rabbit.producer.entity.CustomMessage", CustomMessage.class);
+//        idClassMapping.put("org.framework.integration.example.rabbit.producer.entity.SubMessage", AbstractMessage.class);
+//        classMapper.setIdClassMapping(idClassMapping);
+//        return classMapper;
+//    }
