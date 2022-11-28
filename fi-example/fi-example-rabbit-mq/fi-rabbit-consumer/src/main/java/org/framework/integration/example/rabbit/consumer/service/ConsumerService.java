@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * 点对点：
@@ -190,34 +191,17 @@ public class ConsumerService {
         }
     }
 
-    @RabbitListener(ackMode = "MANUAL", bindings = @QueueBinding(key = {
+    @RabbitListener(containerFactory = "rabbitListenerContainerFactory", bindings = @QueueBinding(key = {
                     "batch" }, value = @Queue(value = QueueDeclare.DIRECT_BATCH_QUEUE), exchange = @Exchange(value = ExchangeDeclare.DIRECT_BATCH_EXCHANGE)))
-    public void batchListener(@Payload List<Message<CustomMessage>> messages, Channel channel) {
-
-        var tags = messages.stream().map(msg -> {
-            var headers = msg.getHeaders();
-            return headers.get(AmqpHeaders.DELIVERY_TAG, Long.class);
-        }).toList();
-
+    public void batchListener(@Payload List<Message<CustomMessage>> messages, Channel channel) throws IOException {
+        log.info("message size = {}", messages.size());
+        var tag = (long) Optional.ofNullable(messages.get(0).getHeaders().get(AmqpHeaders.DELIVERY_TAG)).orElseGet(() -> new RuntimeException("tag 获取异常"));
+        messages.forEach(msg -> System.out.println(msg.getPayload()));
         try {
-            messages.forEach(msg -> System.out.println("payload = " + msg.getPayload()));
-            tags.forEach(tag -> {
-                try {
-                    channel.basicAck(tag, false);
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
-            });
-
+            channel.basicAck(tag, false);
         } catch (Exception e) {
             log.error("消费异常 : {}", e.getMessage());
-            tags.forEach(tag -> {
-                try {
-                    channel.basicReject(tag, false);
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
-            });
+            channel.basicReject(tag, false);
             throw new RuntimeException(e.getMessage(), e);
         }
 

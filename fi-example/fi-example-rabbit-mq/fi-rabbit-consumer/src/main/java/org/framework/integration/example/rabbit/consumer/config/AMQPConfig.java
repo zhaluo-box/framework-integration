@@ -2,12 +2,17 @@ package org.framework.integration.example.rabbit.consumer.config;
 
 import org.framework.integration.example.common.constant.ExchangeDeclare;
 import org.framework.integration.example.common.constant.QueueDeclare;
+import org.framework.integration.example.rabbit.consumer.entity.AbstractMessage;
+import org.framework.integration.example.rabbit.consumer.entity.CustomMessage;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.annotation.RabbitListenerConfigurer;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionNameStrategy;
 import org.springframework.amqp.rabbit.listener.RabbitListenerEndpointRegistrar;
+import org.springframework.amqp.support.converter.ClassMapper;
+import org.springframework.amqp.support.converter.DefaultJackson2JavaTypeMapper;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,7 +40,24 @@ public class AMQPConfig implements RabbitListenerConfigurer {
         SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
         factory.setConnectionFactory(connectionFactory);
         factory.setBatchListener(true);
+        factory.setConsumerBatchEnabled(true);
+        factory.setDeBatchingEnabled(true);
+        factory.setReceiveTimeout(1000L);
+        var messageConverter = new Jackson2JsonMessageConverter();
+        messageConverter.setClassMapper(classMapper());
+        factory.setMessageConverter(messageConverter);
         return factory;
+    }
+
+    @Bean
+    public ClassMapper classMapper() {
+        var classMapper = new DefaultJackson2JavaTypeMapper();
+        classMapper.setTrustedPackages("*"); // 可以设置相信的包， DefaultJackson2JavaTypeMapper  默认只新人 java.util 与Java.lang
+        var idClassMapping = new HashMap<String, Class<?>>();
+        idClassMapping.put("org.framework.integration.example.rabbit.producer.entity.CustomMessage", CustomMessage.class);
+        idClassMapping.put("org.framework.integration.example.rabbit.producer.entity.SubMessage", AbstractMessage.class);
+        classMapper.setIdClassMapping(idClassMapping);
+        return classMapper;
     }
 
     @Bean
@@ -173,13 +195,4 @@ public class AMQPConfig implements RabbitListenerConfigurer {
 //        return factory;
 //    }
 //
-//    @Bean
-//    public ClassMapper classMapper() {
-//        var classMapper = new DefaultJackson2JavaTypeMapper();
-//        classMapper.setTrustedPackages("*"); // 可以设置相信的包， DefaultJackson2JavaTypeMapper  默认只新人 java.util 与Java.lang
-//        var idClassMapping = new HashMap<String, Class<?>>();
-//        idClassMapping.put("org.framework.integration.example.rabbit.producer.entity.CustomMessage", CustomMessage.class);
-//        idClassMapping.put("org.framework.integration.example.rabbit.producer.entity.SubMessage", AbstractMessage.class);
-//        classMapper.setIdClassMapping(idClassMapping);
-//        return classMapper;
-//    }
+

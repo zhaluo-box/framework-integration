@@ -21,13 +21,6 @@ spring:
         shared-configs:
           - application.${spring.cloud.nacos.config.file-extension}
           - shared-rabbit.${spring.cloud.nacos.config.file-extension}
-  rabbitmq:
-    listener:
-      direct:
-        prefetch: 1
-      simple:
-        prefetch: 1
-
 
 logging:
   file:

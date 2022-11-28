@@ -10,6 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * {@link <a href="https://github.com/rabbitmq/rabbitmq-tutorials">官方Demo</a>}
  * Created  on 2022/9/20 13:13:35
  *
  * @author wmz

@@ -1,12 +1,14 @@
 package com.example.rabbit.test;
 
 import com.example.rabbit.test.utils.RabbitConnectFactory;
+import com.rabbitmq.client.DeliverCallback;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 对于使用系统默认交换机的队列 队列名称作为routeKey 使用
@@ -32,6 +34,34 @@ public class SimpleQueueTest extends AbstractQueueTest {
                 channel.basicPublish("", SIMPLE_QUEUE, null, message.getBytes(StandardCharsets.UTF_8));
             }
             log.info("简单消息队列，消息发送完毕！");
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+    }
+
+    @Test
+    @DisplayName("simple queue Listener ")
+    public void simpleQueueListener() {
+
+        try (var connection = RabbitConnectFactory.getConnection(); var channel = connection.createChannel()) {
+            log.info("简单消息队列，消息消费开始！");
+            // 预取5条
+            channel.basicQos(5);
+            DeliverCallback deliverCallback = (consumerTag, delivery) -> {
+                System.out.println("consumerTag = " + consumerTag);
+                String message = new String(delivery.getBody(), StandardCharsets.UTF_8);
+                try {
+                    System.out.printf((SIMPLE_QUEUE) + "%s %n", message);
+                } catch (Exception e) {
+                    channel.basicNack(delivery.getEnvelope().getDeliveryTag(), false, true);
+                } finally {
+                    channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
+                }
+            };
+            channel.basicConsume(SIMPLE_QUEUE, false, deliverCallback, System.out::println);
+            System.out.println("------");
+            TimeUnit.SECONDS.sleep(10L);
+            log.info("简单消息队列，消息消费完毕！");
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
