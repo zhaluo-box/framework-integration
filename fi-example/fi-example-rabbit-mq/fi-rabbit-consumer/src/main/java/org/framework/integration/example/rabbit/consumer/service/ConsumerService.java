@@ -206,6 +206,13 @@ public class ConsumerService {
         }
 
     }
+
+    @RabbitListener(bindings = @QueueBinding(value = @Queue(value = QueueDeclare.SIMPLE_TOPIC), exchange = @Exchange(value = ExchangeDeclare.SIMPLE_TOPIC_EXCHANGE, type = ExchangeTypes.TOPIC), key = {
+                    "log.*" }))
+    public void simpleTopic(@Payload BaseMessage<String> message) {
+        log.debug(" simple topic  测试  {}", message);
+    }
+
 }
 
 //    /**

@@ -16,6 +16,7 @@
         <module>fi-rabbit-common</module>
         <module>fi-rabbit-producer</module>
         <module>fi-rabbit-consumer</module>
+        <module>fi-rabbit-mqtt</module>
     </modules>
 
     <properties>

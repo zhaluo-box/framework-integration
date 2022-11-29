@@ -172,4 +172,11 @@ public class ProducerController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
+    @ApiOperation("简单topic队列测试")
+    @PostMapping("actions/simple-topic/")
+    public ResponseEntity<Void> simpleTopic(@RequestBody BaseMessage<String> message) {
+        rabbitTemplate.convertAndSend(ExchangeDeclare.SIMPLE_TOPIC_EXCHANGE, message.getTarget(), message);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
 }
