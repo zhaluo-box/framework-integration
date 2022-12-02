@@ -3,6 +3,7 @@ package org.framework.integration.example.rabbit.consumer.service;
 import com.rabbitmq.client.Channel;
 import lombok.extern.slf4j.Slf4j;
 import org.framework.integration.example.common.constant.ExchangeDeclare;
+import org.framework.integration.example.common.constant.GroupDeclare;
 import org.framework.integration.example.common.constant.QueueDeclare;
 import org.framework.integration.example.common.dto.BaseMessage;
 import org.framework.integration.example.rabbit.consumer.entity.CustomMessage;
@@ -44,17 +45,17 @@ public class ConsumerService {
     /**
      * 简单消息队列 如果写多个监听者就会变为 work_queue 进行竞争消费
      */
-    @RabbitListener(queues = QueueDeclare.SIMPLE_QUEUE)
+    @RabbitListener(queues = QueueDeclare.SIMPLE_QUEUE, group = GroupDeclare.SIMPLE_GROUP_A)
     public void simpleQueueLister(String message) {
-        log.info("简单消息测试: 消费者[1],消息 ： {}", message);
+        log.info("{} : 简单消息测试: 消费者[1],消息 ： {}", GroupDeclare.SIMPLE_GROUP_A, message);
     }
 
     /**
-     * 简单消息验证 编程work_queue
+     * 简单消息验证 变成work_queue
      */
-    @RabbitListener(queues = QueueDeclare.SIMPLE_QUEUE)
+    @RabbitListener(queues = QueueDeclare.SIMPLE_QUEUE, group = GroupDeclare.SIMPLE_GROUP_B)
     public void simpleQueueLister2(String message) {
-        log.info("简单消息测试: 消费者[2],消息 ： {}", message);
+        log.info("{} : 简单消息测试: 消费者[2],消息 ： {}", GroupDeclare.SIMPLE_GROUP_B, message);
     }
 
     @RabbitListener(queues = QueueDeclare.WORK_QUEUE)

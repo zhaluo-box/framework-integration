@@ -20,7 +20,7 @@ public interface QueueDeclare {
     String TOPIC_QUEUE2 = "fi:example:topic-queue2";
     String TOPIC_QUEUE3 = "fi:example:topic-queue3";
     String TOPIC_QUEUE4 = "fi:example:topic-queue4";
-    
+
     String SIMPLE_TOPIC = "fi:example:simple-topic";
 
     String ABSTRACT_MESSAGE_QUEUE = "fi:example:abstract-message-queue";
@@ -31,5 +31,8 @@ public interface QueueDeclare {
     String DIRECT_QUEUE_DLX = "fi:example:direct-queue-dlx";
 
     String DIRECT_BATCH_QUEUE = "fi:example:direct-batch-queue";
+
+    String CONVERT_FAIL_QUEUE = "convert-fail";
+    String CONVERT_FAIL_QUEUE_DLX = "convert-fail-dlx";
 
 }

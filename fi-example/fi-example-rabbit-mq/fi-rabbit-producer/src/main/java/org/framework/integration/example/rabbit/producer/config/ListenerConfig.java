@@ -6,6 +6,7 @@ import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.annotation.RabbitListenerConfigurer;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.listener.ConditionalRejectingErrorHandler;
 import org.springframework.amqp.rabbit.listener.RabbitListenerEndpointRegistrar;
 import org.springframework.amqp.support.converter.ClassMapper;
 import org.springframework.amqp.support.converter.DefaultJackson2JavaTypeMapper;
@@ -40,7 +41,13 @@ public class ListenerConfig implements RabbitListenerConfigurer {
         var messageConverter = new Jackson2JsonMessageConverter();
         messageConverter.setClassMapper(classMapper());
         factory.setMessageConverter(messageConverter);
+        factory.setErrorHandler(conditionalRejectingErrorHandler());
         return factory;
+    }
+
+    @Bean
+    public ConditionalRejectingErrorHandler conditionalRejectingErrorHandler() {
+        return new ConditionalRejectingErrorHandler();
     }
 
     @Bean
@@ -97,6 +104,42 @@ public class ListenerConfig implements RabbitListenerConfigurer {
     @Bean
     public Binding directBindingError() {
         return BindingBuilder.bind(directQueue()).to(directExchange()).with("error");
+    }
+
+    /**
+     * 消息转换失败队列
+     */
+    @Bean
+    public Queue converterFail() {
+        return QueueBuilder.durable(QueueDeclare.CONVERT_FAIL_QUEUE)
+                           .deadLetterExchange(ExchangeDeclare.CONVERT_FAIL_EXCHANGE_DLX)
+                           .deadLetterRoutingKey("dlx")
+                           .build();
+    }
+
+    @Bean
+    public DirectExchange converterFailExchange() {
+        return ExchangeBuilder.directExchange(ExchangeDeclare.CONVERT_FAIL_EXCHANGE).build();
+    }
+
+    @Bean
+    public Binding converterFailBinding() {
+        return BindingBuilder.bind(converterFail()).to(converterFailExchange()).with("fail");
+    }
+
+    @Bean
+    public Queue converterFailDlx() {
+        return QueueBuilder.durable(QueueDeclare.CONVERT_FAIL_QUEUE_DLX).build();
+    }
+
+    @Bean
+    public DirectExchange converterFailExchangeDlx() {
+        return ExchangeBuilder.directExchange(ExchangeDeclare.CONVERT_FAIL_EXCHANGE_DLX).build();
+    }
+
+    @Bean
+    public Binding converterFailDlxBind() {
+        return BindingBuilder.bind(converterFailDlx()).to(converterFailExchangeDlx()).with("dlx");
     }
 
 }

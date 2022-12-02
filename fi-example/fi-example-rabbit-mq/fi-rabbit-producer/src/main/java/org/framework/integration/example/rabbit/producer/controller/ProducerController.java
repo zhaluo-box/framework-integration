@@ -179,4 +179,11 @@ public class ProducerController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
+    @PostMapping("actions/convert-fail/")
+    @ApiOperation("消息转换失败演示")
+    public ResponseEntity<Void> convertFail(@RequestBody BaseMessage<String> message) {
+        rabbitTemplate.convertAndSend(ExchangeDeclare.CONVERT_FAIL_EXCHANGE, "fail", message);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
 }

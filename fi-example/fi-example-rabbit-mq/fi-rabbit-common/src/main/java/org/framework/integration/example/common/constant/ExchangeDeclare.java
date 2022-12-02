@@ -19,4 +19,6 @@ public interface ExchangeDeclare {
     String TOPIC_EXCHANGE_DLX = "fi:example:topic-exchange-dlx";
 
     String DIRECT_BATCH_EXCHANGE = "fi:example:direct-batch-exchange";
+    String CONVERT_FAIL_EXCHANGE = "fi:example:convert-fail-exchange";
+    String CONVERT_FAIL_EXCHANGE_DLX = "fi:example:convert-fail-exchange-dlx";
 }
