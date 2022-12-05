@@ -15,7 +15,9 @@
     - fi-example-rabbit-mq : Rabbit-MQ 案例
         - producer : 12001
         - consumer : 12002
+        - MQTT     : 12003
     - fi-example-nacos : 12003
+    - fi-example-MQTT : 12004
 
 - system-management-center： 系统管理中心 接口 11001 开始
     - sys-monitor: 系统监控

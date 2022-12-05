@@ -1,5 +1,7 @@
 package org.framework.integration.gateway.filter;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.framework.integration.security.core.constant.AuthConstants;
 import org.framework.integration.security.core.constant.AuthHeaderConstants;
@@ -69,20 +71,23 @@ public class AuthFilter extends AbstractFilter {
 
         // 解析token
         var token = authorizationInfo.split(" ")[1];
-        //        final var authInfo = JwtUtil.getCustomClaims(token, AuthInfo.class);
+        Claims customClaims;
+        try {
+            customClaims = JwtUtil.getCustomClaims(token, Map.of(AuthInfo.class.getSimpleName(), AuthInfo.class));
+        } catch (ExpiredJwtException e) {
+            return webFluxResponseWriter(response, MediaType.APPLICATION_JSON_VALUE, HttpStatus.UNAUTHORIZED, "令牌已失效或当前用户已退出登录,请重新登录", 401);
+        }
 
-        var customClaims = JwtUtil.getCustomClaims(token, Map.of(AuthInfo.class.getSimpleName(), AuthInfo.class));
         var authInfo = customClaims.get(AuthInfo.class.getSimpleName(), AuthInfo.class);
-
-        // TODO @wmz 2022/11/17 验证token 是否过期
 
         // 黑名单token 过滤
         if (!blackTokenFilter(authInfo.getTokenId())) {
-            return webFluxResponseWriter(response, MediaType.APPLICATION_JSON_VALUE, HttpStatus.UNAUTHORIZED, "令牌已失效,当前用户已退出登录,请重新登录", 401);
+            return webFluxResponseWriter(response, MediaType.APPLICATION_JSON_VALUE, HttpStatus.UNAUTHORIZED, "当前用户已被锁定！", 401);
         }
 
         // 校验是否刷新token
-        if (verifyIsNeedRefreshToken(customClaims.getExpiration())) {
+        var expiration = customClaims.getExpiration();
+        if (verifyIsNeedRefreshToken(expiration)) {
             var newToken = JwtUtil.createToken(Map.of(AuthInfo.class.getSimpleName(), AuthInfo.class), securityFilterProperties.getTtl());
             response.getHeaders().add("new_token", newToken);
         }
