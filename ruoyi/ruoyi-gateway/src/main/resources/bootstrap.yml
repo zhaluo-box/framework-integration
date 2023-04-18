@@ -1,0 +1,40 @@
+# Tomcat
+server:
+  port: 38080
+
+logging:
+  file:
+    name: /home/logs/${spring.application.name}/${spring.application.name}.log
+
+spring:
+  application:
+    # 应用名称
+    name: ruoyi-gateway
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      config:
+        # 配置中心地址
+        server-addr: ${spring.cloud.nacos.discovery.server-addr}
+        namespace: fi-ruoyi-${spring.config.activate.on-profile}
+        # 配置文件格式
+        file-extension: yml
+        # 共享配置
+        shared-configs:
+          - application.${spring.cloud.nacos.config.file-extension}
+          - shared-redis-config.${spring.cloud.nacos.config.file-extension}
+---
+
+# Spring
+spring:
+  cloud:
+    nacos:
+      discovery:
+        # 服务注册地址
+        server-addr: 127.0.0.1:8848
+        namespace: fi-ruoyi-${spring.config.activate.on-profile}
+
+  config:
+    activate:
+      on-profile: dev

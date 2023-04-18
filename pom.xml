@@ -8,6 +8,7 @@
     <artifactId>framework-integration</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
+
     <modules>
         <module>business-center</module>
         <module>system-management-center</module>
@@ -16,6 +17,7 @@
         <module>framework-common</module>
         <module>task-center</module>
         <module>fi-example</module>
+        <module>ruoyi</module>
     </modules>
 
     <properties>
