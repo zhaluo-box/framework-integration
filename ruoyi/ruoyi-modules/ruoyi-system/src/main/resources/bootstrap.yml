@@ -25,7 +25,6 @@ spring:
           - application.${spring.cloud.nacos.config.file-extension}
           - shared-redis-config.${spring.cloud.nacos.config.file-extension}
           - shared-db-config.${spring.cloud.nacos.config.file-extension}
-
 ---
 
 # Spring
