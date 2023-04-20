@@ -1,0 +1,40 @@
+spring:
+  profiles:
+    active: dev
+  application:
+    name: sys-test
+
+  cloud:
+    nacos:
+      config:
+        # 配置中心地址
+        server-addr: ${spring.cloud.nacos.discovery.server-addr}
+        namespace: fi-${spring.config.activate.on-profile}
+        # 配置文件格式
+        file-extension: yml
+        # 共享配置
+        shared-configs:
+          - application.${spring.cloud.nacos.config.file-extension}
+logging:
+  file:
+    name: /home/logs/${spring.application.name}/${spring.application.name}.log
+  pattern:
+    console: ${CONSOLE_LOG_PATTERN:-%clr(%d){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }) [%X{TRACE_ID}] %clr(--){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}
+
+
+
+server:
+  port: 11001
+
+---
+# Spring
+spring:
+  cloud:
+    nacos:
+      discovery:
+        # 服务注册地址
+        server-addr: 127.0.0.1:8848
+        namespace: fi-${spring.config.activate.on-profile}
+  config:
+    activate:
+      on-profile: dev

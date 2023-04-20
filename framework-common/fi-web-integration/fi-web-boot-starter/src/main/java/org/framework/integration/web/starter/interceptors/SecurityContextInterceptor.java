@@ -43,7 +43,7 @@ public class SecurityContextInterceptor implements AsyncHandlerInterceptor {
             throw new RuntimeException("认证信息解析异常", e);
         }
 
-        return AsyncHandlerInterceptor.super.preHandle(request, response, handler);
+        return true;
     }
 
     @Override
@@ -72,10 +72,10 @@ public class SecurityContextInterceptor implements AsyncHandlerInterceptor {
     /**
      * 如果为空，则返回0
      */
-    private long strToLong(String headerValue) {
-        if (!StringUtils.hasText(headerValue)) {
+    private long strToLong(String value) {
+        if (!StringUtils.hasText(value)) {
             return 0;
         }
-        return Long.parseLong(headerValue);
+        return Long.parseLong(value);
     }
 }

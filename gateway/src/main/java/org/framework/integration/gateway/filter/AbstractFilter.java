@@ -47,7 +47,7 @@ public abstract class AbstractFilter implements GlobalFilter, Ordered {
     }
 
     enum Ordered {
-        AUTH, PERMISSION
+        AUTH, PERMISSION, LOG_TRACE
     }
 
 }

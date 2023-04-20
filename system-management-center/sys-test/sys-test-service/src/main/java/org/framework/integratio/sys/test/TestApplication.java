@@ -1,22 +1,20 @@
-package org.framework.integration.sys.base;
+package org.framework.integratio.sys.test;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.cloud.openfeign.EnableFeignClients;
 
 /**
- * Created  on 2022/8/2 10:10:51
+ * Created  on 2023/4/20 17:17:09
  *
  * @author zl
  */
-@EnableFeignClients(value = "org.framework.integration.**.client")
 @EnableDiscoveryClient
 @SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
-public class SysBaseApplication {
+public class TestApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(SysBaseApplication.class, args);
+        SpringApplication.run(TestApplication.class, args);
     }
 }
