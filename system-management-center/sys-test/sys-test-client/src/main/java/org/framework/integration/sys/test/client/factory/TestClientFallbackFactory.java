@@ -21,6 +21,7 @@ public class TestClientFallbackFactory implements FallbackFactory<TestClient> {
         return new TestClient() {
             @Override
             public ResponseEntity<Void> logTest() {
+                log.info("xxxxxxxxxxxxx");
                 return ResponseEntity.fail("log test failed" + cause.getMessage());
             }
         };
