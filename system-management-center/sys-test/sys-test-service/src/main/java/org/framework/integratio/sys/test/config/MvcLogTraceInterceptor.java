@@ -5,7 +5,7 @@ import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
-import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.AsyncHandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,7 +19,9 @@ import java.util.UUID;
  * @author zl
  */
 @Component
-public class MvcLogTraceInterceptor implements HandlerInterceptor, Ordered {
+public class MvcLogTraceInterceptor implements AsyncHandlerInterceptor, Ordered {
+
+    // TODO  2023/4/27 通过ttl 保存 Trace Info
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {

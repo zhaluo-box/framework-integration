@@ -76,6 +76,13 @@
             <artifactId>sys-test-client</artifactId>
         </dependency>
 
+        <!--集成logstash-->
+        <dependency>
+            <groupId>net.logstash.logback</groupId>
+            <artifactId>logstash-logback-encoder</artifactId>
+            <version>5.3</version>
+        </dependency>
+
     </dependencies>
 
     <build>

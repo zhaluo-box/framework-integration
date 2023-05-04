@@ -18,8 +18,14 @@ spring:
 logging:
   pattern:
     console: '[%X{TRACE_ID}] %clr(%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD: %wEx}'
+    file: '[%X{TRACE_ID}] %clr(%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD: %wEx}'
   file:
     name: /home/logs/${spring.application.name}/${spring.application.name}.log
+
+logstash:
+  enable: true #默认为false
+  host: 127.0.0.1:4560 # logstash地址
+  index: test # es中index名称
 
 server:
   port: 11002
