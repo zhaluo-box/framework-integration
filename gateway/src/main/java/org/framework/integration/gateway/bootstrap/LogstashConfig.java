@@ -51,7 +51,7 @@ public class LogstashConfig implements ApplicationRunner {
         }
 
         // 判断是否设置appName,如果没有设置appname则使用applicaionanme-active替代
-        if (null != index || "".equals(index)) {
+        if (null != index) {
             index = applicationName + "-" + activePro;
         }
 
