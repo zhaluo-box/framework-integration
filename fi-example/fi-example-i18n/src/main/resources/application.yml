@@ -1,0 +1,9 @@
+server:
+  port: 12005
+
+
+spring:
+  messages:
+    basename: i18n/message
+    fallback-to-system-locale: true
+    encoding: utf-8

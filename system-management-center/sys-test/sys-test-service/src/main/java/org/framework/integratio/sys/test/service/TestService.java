@@ -57,5 +57,7 @@ public class TestService {
     @Async("myTraceExecutor")
     public void asyncTest() {
         log.info("哈哈");
+
+        System.out.println("SecurityContextHolder.getAccountName() = " + SecurityContextHolder.getAccountName());
     }
 }

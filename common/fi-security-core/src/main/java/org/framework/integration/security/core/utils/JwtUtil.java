@@ -20,10 +20,10 @@ import java.util.Map;
  * Created  on 2022/7/28 16:16:28
  *
  * @author zl
- * @see org.framework.integration.security.core.utils #JwtUtilTest
+ * @see org.framework.integration.security.core.utils.JwtUtilTest
  */
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @SuppressWarnings("unused")
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class JwtUtil {
 
     /**
