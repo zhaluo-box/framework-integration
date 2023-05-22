@@ -3,4 +3,4 @@
  *
  * @author zl
  */
-package org.framework.integration.example.i18n.common;
+package org.framework.integration.example.web.mvc.common;

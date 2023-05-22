@@ -1,4 +1,4 @@
-package org.framework.integration.example.i18n.config;
+package org.framework.integration.example.web.mvc.config;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;

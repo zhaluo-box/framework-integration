@@ -1,4 +1,4 @@
-package org.framework.integration.example.i18n.utils;
+package org.framework.integration.example.web.mvc.utils;
 
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

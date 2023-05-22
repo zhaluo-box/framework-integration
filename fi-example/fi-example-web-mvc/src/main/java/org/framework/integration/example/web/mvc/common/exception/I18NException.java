@@ -1,4 +1,4 @@
-package org.framework.integration.example.i18n.common.exception;
+package org.framework.integration.example.web.mvc.common.exception;
 
 /**
  * Created  on 2023/5/17 09:9:21

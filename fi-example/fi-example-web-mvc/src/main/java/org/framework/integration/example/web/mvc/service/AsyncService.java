@@ -1,6 +1,6 @@
-package org.framework.integration.example.i18n.service;
+package org.framework.integration.example.web.mvc.service;
 
-import org.framework.integration.example.i18n.utils.MessageUtil;
+import org.framework.integration.example.web.mvc.utils.MessageUtil;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 

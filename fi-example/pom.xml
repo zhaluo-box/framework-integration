@@ -17,7 +17,8 @@
         <module>fi-example-nacos</module>
         <module>fi-example-mqtt5</module>
         <module>fi-example-feign</module>
-        <module>fi-example-i18n</module>
+        <module>fi-example-sleuth-monitor</module>
+        <module>fi-example-web-mvc</module>
     </modules>
 
     <properties>

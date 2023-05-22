@@ -1,6 +1,6 @@
-package org.framework.integration.example.i18n;
+package org.framework.integration.example.web.mvc;
 
-import org.framework.integration.example.i18n.utils.MessageUtil;
+import org.framework.integration.example.web.mvc.utils.MessageUtil;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -14,13 +14,13 @@ import org.springframework.scheduling.annotation.EnableAsync;
  */
 @EnableAsync
 @SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
-public class I18NApplication {
+public class FIWebMvcApplication {
 
-    public I18NApplication(MessageSource messageSource) {
+    public FIWebMvcApplication(MessageSource messageSource) {
         MessageUtil.init(messageSource);
     }
 
     public static void main(String[] args) {
-        SpringApplication.run(I18NApplication.class, args);
+        SpringApplication.run(FIWebMvcApplication.class, args);
     }
 }

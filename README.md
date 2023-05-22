@@ -18,7 +18,7 @@
         - MQTT     : 12003
     - fi-example-nacos : 12003
     - fi-example-MQTT : 12004
-    - fi-example-i18n : 12005 ==> spring boot 国际化Demo
+    - fi-example-web-mvc : 12005 ==> spring boot 国际化、 操作日志... 演示模块
 
 - system-management-center： 系统管理中心 接口 11001 开始
     - sys-monitor: 系统监控

@@ -1,8 +1,9 @@
 server:
   port: 12005
 
-
 spring:
+  application:
+    name: fi-web-mvc
   messages:
     basename: i18n/message
     fallback-to-system-locale: true
