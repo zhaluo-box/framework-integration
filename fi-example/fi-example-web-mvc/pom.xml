@@ -32,6 +32,21 @@
             <groupId>org.framework.integration</groupId>
             <artifactId>fi-swagger-boot-starter</artifactId>
         </dependency>
+
+
+        <dependency>
+            <groupId>org.framework.integration</groupId>
+            <artifactId>fi-common-utils</artifactId>
+        </dependency>
+
+
+        <!-- 线程传递值 -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>transmittable-thread-local</artifactId>
+            <version>${transmittable-thread-local.version}</version>
+        </dependency>
+
     </dependencies>
 
 </project>

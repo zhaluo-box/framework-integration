@@ -33,4 +33,5 @@ public class I18NTestController {
     public void asyncTest(@RequestParam String code) {
         asyncService.printName(code);
     }
+    
 }

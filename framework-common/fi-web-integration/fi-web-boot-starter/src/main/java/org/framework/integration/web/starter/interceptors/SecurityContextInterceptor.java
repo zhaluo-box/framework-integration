@@ -48,8 +48,12 @@ public class SecurityContextInterceptor implements AsyncHandlerInterceptor {
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        SecurityContextHolder.remove();
         AsyncHandlerInterceptor.super.afterCompletion(request, response, handler, ex);
+    }
+
+    @Override
+    public void afterConcurrentHandlingStarted(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        SecurityContextHolder.remove();
     }
 
     private AuthInfo extractAuthInfo(HttpServletRequest request) {

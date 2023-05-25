@@ -1,33 +1,29 @@
-package com.ruoyi.common.log.annotation;
+package org.framework.integration.example.web.mvc.common.annotations;
 
-import com.ruoyi.common.log.enums.BusinessType;
-import com.ruoyi.common.log.enums.OperatorType;
+import org.framework.integration.example.web.mvc.common.enums.BusinessType;
 
 import java.lang.annotation.*;
 
 /**
- * 自定义操作日志记录注解
+ * 操作日志
+ * Created  on 2023/5/23 14:14:51
  *
- * @author ruoyi
+ * @author zl
  */
-@Target({ ElementType.PARAMETER, ElementType.METHOD })
-@Retention(RetentionPolicy.RUNTIME)
 @Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
 public @interface Log {
+    
     /**
-     * 模块
+     * 名称
      */
-    String title() default "";
+    String name() default "";
 
     /**
      * 功能
      */
     BusinessType businessType() default BusinessType.OTHER;
-
-    /**
-     * 操作人类别
-     */
-    OperatorType operatorType() default OperatorType.MANAGE;
 
     /**
      * 是否保存请求的参数
