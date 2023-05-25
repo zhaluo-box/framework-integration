@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>system-management-center</artifactId>
+        <groupId>org.framework.integration</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>fi-microservice-governance</artifactId>
+
+    <description>全称 "fi-microservice-governance" 简称 fi-mg 系统，用于服务治理， 包含日志查询</description>
+    <packaging>pom</packaging>
+
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+
+    <modules>
+        <module>fi-mg-service</module>
+        <module>fi-mg-common</module>
+        <module>fi-mg-client</module>
+    </modules>
+
+</project>
