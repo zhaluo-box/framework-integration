@@ -1,4 +1,4 @@
-package org.framework.integration.fi.mg.client.web;
+package org.framework.integration.fi.mg.client.config.support;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -19,7 +19,7 @@ public class LogContextHolder {
         THREAD_LOCAL.remove();
     }
 
-    public static SysOperationLogOriginalDTO getLocalMap() {
+    public static SysOperationLogOriginalDTO getLogContext() {
         SysOperationLogOriginalDTO dto = THREAD_LOCAL.get();
         if (dto == null) {
             dto = new SysOperationLogOriginalDTO();

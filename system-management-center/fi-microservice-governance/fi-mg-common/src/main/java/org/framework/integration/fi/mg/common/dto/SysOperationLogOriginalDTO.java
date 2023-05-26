@@ -27,7 +27,7 @@ public class SysOperationLogOriginalDTO {
     private String businessCode;
 
     /**
-     * 操作API name
+     * 操作API name [@log(name="")]
      */
     private String name;
 
@@ -78,22 +78,22 @@ public class SysOperationLogOriginalDTO {
     /**
      * 请求方法
      */
-    private Map<String, String> requestHeaders;
+    private Map<String, String> originalRequestHeaders;
 
     /**
      * 请求参数
      */
-    private Map<String, String[]> requestParam;
+    private Map<String, String[]> originalRequestParam;
 
     /**
      * 响应头
      */
-    private Map<String, String> responseHeader;
+    private Map<String, String> originalResponseHeader;
 
     /**
      * 返回参数
      */
-    private Object body;
+    private Object originalResponseData;
 
     /**
      * 错误消息
@@ -143,5 +143,12 @@ public class SysOperationLogOriginalDTO {
      * 消耗时间
      */
     private Long costTime;
+
+    // ----------------------标记信息 --------------
+
+    /**
+     * 是否忽略当前方法, 默认为false
+     */
+    private boolean ignored = false;
 
 }

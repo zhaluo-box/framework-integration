@@ -48,6 +48,9 @@
         <common.project.version>1.0-SNAPSHOT</common.project.version>
         <framework-common.project.version>1.0-SNAPSHOT</framework-common.project.version>
 
+        <hutool.version>5.8.18</hutool.version>
+
+
     </properties>
 
 
@@ -131,6 +134,16 @@
                 <groupId>com.alibaba</groupId>
                 <artifactId>transmittable-thread-local</artifactId>
                 <version>${transmittable-thread-local.version}</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-bom</artifactId>
+                <version>${hutool.version}</version>
+                <type>pom</type>
+                <!-- 注意这里是import -->
+                <scope>import</scope>
             </dependency>
 
         </dependencies>

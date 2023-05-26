@@ -15,6 +15,6 @@ public @interface LogGroup {
     /**
      * @return 操作日志分组名称
      */
-    String name() default "";
+    String name();
 
 }

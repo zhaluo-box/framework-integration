@@ -1,5 +1,6 @@
 package org.framework.integration.fi.mg.client;
 
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
@@ -10,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @ComponentScan(basePackages = "org.framework.integration.fi.mg.client")
-public class BeanScanner {
+@EnableConfigurationProperties
+public class BeanConfiguration {
 
 }

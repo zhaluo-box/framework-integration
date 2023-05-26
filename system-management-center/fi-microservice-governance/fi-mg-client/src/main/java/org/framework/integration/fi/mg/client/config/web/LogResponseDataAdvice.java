@@ -1,11 +1,13 @@
-package org.framework.integration.fi.mg.client.web;
+package org.framework.integration.fi.mg.client.config.web;
 
 import lombok.extern.slf4j.Slf4j;
+import org.framework.integration.fi.mg.client.config.support.LogContextHolder;
+import org.framework.integration.fi.mg.common.dto.SysOperationLogOriginalDTO;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
@@ -15,9 +17,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
  * @author zl
  */
 @Slf4j
-@Component
 @ControllerAdvice
-public class LogResponseDataAdvice implements ResponseBodyAdvice {
+public class LogResponseDataAdvice<T> implements ResponseBodyAdvice<T> {
 
     @Override
     public boolean supports(MethodParameter returnType, Class converterType) {
@@ -26,15 +27,18 @@ public class LogResponseDataAdvice implements ResponseBodyAdvice {
     }
 
     @Override
-    public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class selectedConverterType,
-                                  ServerHttpRequest request, ServerHttpResponse response) {
-
+    public T beforeBodyWrite(T body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType,
+                             ServerHttpRequest request, ServerHttpResponse response) {
         if (log.isTraceEnabled()) {
             log.trace("操作日志埋点，响应数据检测！ body type : {}, body : {}", returnType, body);
             log.trace("other param : selectedContentType : {},selectedConverterType : {}", selectedContentType, selectedConverterType);
         }
 
-        LogContextHolder.getLocalMap().setBody(body);
+        SysOperationLogOriginalDTO logContext = LogContextHolder.getLogContext();
+        if (!logContext.isIgnored()) {
+            logContext.setOriginalResponseData(body);
+        }
         return body;
     }
+
 }

@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  org.framework.integration.fi.mg.client.BeanScanner
+  org.framework.integration.fi.mg.client.BeanConfiguration

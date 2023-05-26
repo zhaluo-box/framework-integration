@@ -18,7 +18,7 @@ public @interface Log {
     /**
      * 名称
      */
-    String name() default "";
+    String name();
 
     /**
      * 功能
@@ -29,4 +29,9 @@ public @interface Log {
      * 排除指定的请求参数
      */
     String[] excludeParamNames() default {};
+
+    /**
+     * @return 是否需要忽略当前方法
+     */
+    boolean ignore() default false;
 }

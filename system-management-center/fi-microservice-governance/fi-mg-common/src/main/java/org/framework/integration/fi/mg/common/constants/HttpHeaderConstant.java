@@ -12,4 +12,14 @@ public interface HttpHeaderConstant {
      */
     String INVOKE_WAY = "M_INVOKE_WAY";
 
+    /**
+     * 请求来源
+     */
+    String FROM_MODULE = "M_FROM_MODULE";
+
+    /**
+     * 调用层级
+     */
+    String INVOKE_HIERARCHY = "M_INVOKE_HIERARCHY";
+
 }
