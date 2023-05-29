@@ -1,6 +1,7 @@
 package org.framework.integration.fi.mg.common.service;
 
 import org.framework.integration.fi.mg.common.dto.SysOperationLogDTO;
+import org.framework.integration.fi.mg.common.dto.SysOperationLogOriginalDTO;
 
 /**
  * 只用作保存的service
@@ -12,10 +13,10 @@ public interface SysOperationLogSaveService {
 
     void save(SysOperationLogDTO sysOperationLogDTO);
 
-    void saveBefore(SysOperationLogDTO sysOperationLogDTO);
-
-    default void handleLog(SysOperationLogDTO sysOperationLogDTO) {
-        saveBefore(sysOperationLogDTO);
-        save(sysOperationLogDTO);
+    default void saveBefore(SysOperationLogDTO sysOperationLogDTO) {
+        // do nothing
     }
+
+    SysOperationLogDTO transformer(SysOperationLogOriginalDTO sysOperationLogOriginalDTO);
+
 }

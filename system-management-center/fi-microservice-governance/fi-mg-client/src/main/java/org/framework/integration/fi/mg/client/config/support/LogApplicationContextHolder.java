@@ -32,7 +32,7 @@ public class LogApplicationContextHolder {
         return METHOD_CACHE.containsKey(method);
     }
 
-    public HandlerMethodInfo getHandleMethodInfo(Method method) {
+    public static HandlerMethodInfo getHandleMethodInfo(Method method) {
         return METHOD_CACHE.get(method);
     }
 

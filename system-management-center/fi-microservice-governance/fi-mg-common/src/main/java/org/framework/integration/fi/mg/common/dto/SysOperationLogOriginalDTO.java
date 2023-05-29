@@ -5,7 +5,9 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import org.framework.integration.fi.mg.common.enums.BusinessType;
 
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -32,6 +34,11 @@ public class SysOperationLogOriginalDTO {
     private String name;
 
     /**
+     * API 分组名称
+     */
+    private String groupName;
+
+    /**
      * 业务类型
      */
     private BusinessType businessType;
@@ -40,6 +47,11 @@ public class SysOperationLogOriginalDTO {
      * 请求方法 包含类名信息
      */
     private String method;
+
+    /**
+     * 排除的参数名
+     */
+    private String[] excludeParamNames;
 
     /**
      * 模块名称 ： 审批模块 （approve-service）
@@ -63,6 +75,11 @@ public class SysOperationLogOriginalDTO {
      */
     private String invokeHierarchy;
 
+    /**
+     * 调用方式
+     */
+    private String invokeWay;
+
     // ---------- 原生Http 信息 --------------------
 
     /**
@@ -78,7 +95,7 @@ public class SysOperationLogOriginalDTO {
     /**
      * 请求方法
      */
-    private Map<String, String> originalRequestHeaders;
+    private Map<String, List<String>> originalRequestHeaders;
 
     /**
      * 请求参数
@@ -88,7 +105,7 @@ public class SysOperationLogOriginalDTO {
     /**
      * 响应头
      */
-    private Map<String, String> originalResponseHeader;
+    private Map<String, Collection<String>> originalResponseHeader;
 
     /**
      * 返回参数
@@ -99,6 +116,11 @@ public class SysOperationLogOriginalDTO {
      * 错误消息
      */
     private String errorMsg;
+
+    /**
+     * Http 响应码
+     */
+    private Integer httpCode;
 
     // ------------操作人的相关信息-----------------
 

@@ -25,9 +25,14 @@ public class SysOperationLogDTO {
     private String businessCode;
 
     /**
-     * 操作API name
+     * 操作API name [@log(name="")]
      */
     private String name;
+
+    /**
+     * API 分组名称
+     */
+    private String groupName;
 
     /**
      * 业务类型
@@ -62,7 +67,7 @@ public class SysOperationLogDTO {
     private String invokeHierarchy;
 
     /**
-     * 调用方式，是内部调用，还是外部调用
+     * 调用方式
      */
     private String invokeWay;
 
@@ -102,6 +107,11 @@ public class SysOperationLogDTO {
      * 错误消息
      */
     private String errorMsg;
+
+    /**
+     * Http 响应码
+     */
+    private Integer httpCode;
 
     // ------------操作人的相关信息-----------------
 
@@ -143,7 +153,7 @@ public class SysOperationLogDTO {
     private Date endTime;
 
     /**
-     * 消耗时间
+     * 消耗时间(单位毫秒)
      */
     private Long costTime;
 

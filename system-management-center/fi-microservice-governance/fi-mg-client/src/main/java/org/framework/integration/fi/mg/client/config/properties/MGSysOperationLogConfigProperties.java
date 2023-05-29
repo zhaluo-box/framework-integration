@@ -26,7 +26,7 @@ public class MGSysOperationLogConfigProperties {
      * 系统名称
      * eg: XXX 系统
      */
-    private String appName;
+    private String systemName;
 
     /**
      * 模块名称
@@ -43,6 +43,16 @@ public class MGSysOperationLogConfigProperties {
      * 本地配置
      */
     private LogConfigProperties localConfig;
+
+    /**
+     * 是否开启异步配置
+     */
+    private boolean openAsync;
+
+    /**
+     * 异步线程配置
+     */
+    private AsyncThreadPoolProperties asyncThreadPoolProperties;
 
     /**
      * 基本上内置了一系列的filter  进行扩展使用
@@ -83,6 +93,19 @@ public class MGSysOperationLogConfigProperties {
         private String key;
 
         private String value;
+
+    }
+
+    @Data
+    public static class AsyncThreadPoolProperties {
+
+        private int coreSize = Runtime.getRuntime().availableProcessors();
+
+        private int maximumPoolSize = Runtime.getRuntime().availableProcessors();
+
+        private long keepAliveTime = 180;
+
+        private int blockDequeSize = 100;
 
     }
 
