@@ -5,7 +5,7 @@ import org.framework.integration.fi.mg.common.enums.BusinessType;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import java.util.*;
 
 /**
  * Created  on 2023/5/26 13:13:49
@@ -63,36 +63,33 @@ public class MGSysOperationLogConfigProperties {
         /**
          * 请求参数与响应体 敏感属性过滤
          */
-        private List<String> propertyFilter;
+        private List<String> propertyFilter = new ArrayList<>();
 
         /**
          * 白名单列表
          */
-        private List<String> whitePathList;
+        private List<String> whitePathList = new ArrayList<>();
 
         /**
          * 全局无需扫描Controller类
          */
-        private List<String> ignoreClass;
+        private List<String> ignoreClass = new ArrayList<>();
 
         /**
          * 需要忽略的业务操作类型
          */
-        private List<BusinessType> ignoreBusinessType;
+        private List<BusinessType> ignoreBusinessType = new ArrayList<>();
 
         /**
          * 基于请求头过滤
          */
-        private List<HeaderValue> requestHeaderFilter;
+        private Map<String, String> requestHeaderFilter = new HashMap<>();
 
-    }
-
-    @Data
-    public static class HeaderValue {
-
-        private String key;
-
-        private String value;
+        /**
+         * http 请求方法
+         * eg: get  post ...
+         */
+        private Set<String> ignoreHttpMethods = new HashSet<>();
 
     }
 

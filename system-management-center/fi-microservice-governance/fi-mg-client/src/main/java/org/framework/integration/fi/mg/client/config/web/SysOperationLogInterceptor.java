@@ -9,6 +9,7 @@ import org.framework.integration.fi.mg.client.common.HandlerMethodInfo;
 import org.framework.integration.fi.mg.client.config.properties.MGSysOperationLogConfigProperties;
 import org.framework.integration.fi.mg.client.config.support.LogApplicationContextHolder;
 import org.framework.integration.fi.mg.client.config.support.LogContextHolder;
+import org.framework.integration.fi.mg.client.config.web.filter.SysOperationLogFilter;
 import org.framework.integration.fi.mg.common.constants.HttpHeaderConstant;
 import org.framework.integration.fi.mg.common.dto.SysOperationLogOriginalDTO;
 import org.framework.integration.fi.mg.common.service.BusinessIdProvider;
@@ -43,6 +44,9 @@ public class SysOperationLogInterceptor implements HandlerInterceptor {
     @Autowired
     private MGSysOperationLogConfigProperties mgSysOperationLogConfigProperties;
 
+    @Autowired
+    private List<SysOperationLogFilter> filters;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
@@ -64,6 +68,15 @@ public class SysOperationLogInterceptor implements HandlerInterceptor {
             }
 
             HandlerMethodInfo handleMethodInfo = LogApplicationContextHolder.getHandleMethodInfo(method);
+
+            // 过滤 如果过滤状态为false ,则忽略不再进行记录操作
+            for (SysOperationLogFilter filter : filters) {
+                boolean status = filter.filter(request, handleMethodInfo);
+                if (!status) {
+                    logContext.setIgnored(true);
+                    return true;
+                }
+            }
 
             // operator & method  & system info
             logContext.setStartTime(new Date())
@@ -92,7 +105,7 @@ public class SysOperationLogInterceptor implements HandlerInterceptor {
                       .setInvokeWay(request.getHeader(HttpHeaderConstant.INVOKE_WAY));
 
         } catch (Exception e) {
-            log.error("");
+            log.error("操作日志采集，数据提取填充失败！", e);
         }
         return true;
 
