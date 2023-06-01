@@ -26,6 +26,7 @@
         <module>fi-mg-service</module>
         <module>fi-mg-common</module>
         <module>fi-mg-client</module>
+        <module>fi-mg-db-view</module>
     </modules>
 
 </project>

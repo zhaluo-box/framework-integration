@@ -64,7 +64,7 @@ public class SysOperationLogDTO {
     /**
      * 调用层级
      */
-    private String invokeHierarchy;
+    private Integer invokeHierarchy;
 
     /**
      * 调用方式
@@ -96,7 +96,7 @@ public class SysOperationLogDTO {
     /**
      * 响应头
      */
-    private String responseHeader;
+    private String responseHeaders;
 
     /**
      * 返回参数
@@ -128,15 +128,15 @@ public class SysOperationLogDTO {
     /**
      * 操作地址
      */
-    private String host;
+    private String operatorIp;
 
     /**
      * 地址识别（大致区域 例如 北京，上海）
      */
-    private String hostMap;
+    private String operatorIpRegion;
 
     /**
-     * 操作状态（0正常 1异常）
+     * 操作状态（success 正常 fail 失败）
      */
     private String status;
 

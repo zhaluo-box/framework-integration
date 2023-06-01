@@ -46,6 +46,11 @@
         </dependency>
 
 
+        <dependency>
+            <groupId>org.framework.integration</groupId>
+            <artifactId>fi-mp-core</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>

@@ -36,7 +36,7 @@
         <jackson-bom.version>2.11.4</jackson-bom.version>
 
         <lombok.version>1.18.20</lombok.version>
-        <mybaits-plus.version>3.5.1</mybaits-plus.version>
+        <spring-boot.mybatis-plus>3.5.3</spring-boot.mybatis-plus>
         <!-- TODO　dependencyManagement 中的依赖版本统一有properties 管理　　-->
         <bootstrap.starter.version>3.1.0</bootstrap.starter.version>
 
@@ -49,7 +49,6 @@
         <framework-common.project.version>1.0-SNAPSHOT</framework-common.project.version>
 
         <hutool.version>5.8.18</hutool.version>
-
 
     </properties>
 
@@ -145,6 +144,7 @@
                 <!-- 注意这里是import -->
                 <scope>import</scope>
             </dependency>
+
 
         </dependencies>
     </dependencyManagement>

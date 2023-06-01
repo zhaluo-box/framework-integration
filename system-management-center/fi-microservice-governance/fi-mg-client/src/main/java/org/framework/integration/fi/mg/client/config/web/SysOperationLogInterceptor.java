@@ -12,11 +12,13 @@ import org.framework.integration.fi.mg.client.config.support.LogContextHolder;
 import org.framework.integration.fi.mg.client.config.web.filter.SysOperationLogFilter;
 import org.framework.integration.fi.mg.common.constants.HttpHeaderConstant;
 import org.framework.integration.fi.mg.common.dto.SysOperationLogOriginalDTO;
+import org.framework.integration.fi.mg.common.enums.InvokeWay;
 import org.framework.integration.fi.mg.common.service.BusinessIdProvider;
 import org.framework.integration.fi.mg.common.service.SysOperatorProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -101,8 +103,8 @@ public class SysOperationLogInterceptor implements HandlerInterceptor {
                       .setRequestUrl(requestURI)
                       .setOriginalRequestParam(request.getParameterMap())
                       .setFromModuleName(request.getHeader(HttpHeaderConstant.FROM_MODULE))
-                      .setInvokeHierarchy(request.getHeader(HttpHeaderConstant.INVOKE_HIERARCHY))
-                      .setInvokeWay(request.getHeader(HttpHeaderConstant.INVOKE_WAY));
+                      .setInvokeHierarchy(getInvokeHierarchy(request))
+                      .setInvokeWay(getInvokeWay(request));
 
         } catch (Exception e) {
             log.error("操作日志采集，数据提取填充失败！", e);
@@ -142,6 +144,16 @@ public class SysOperationLogInterceptor implements HandlerInterceptor {
         return ExceptionUtil.getMessage(ex);
     }
 
+    private String getInvokeWay(HttpServletRequest request) {
+        String value = request.getHeader(HttpHeaderConstant.INVOKE_WAY);
+
+        if (StringUtils.hasText(value)) {
+            return value;
+        }
+
+        return InvokeWay.OUTER.name();
+    }
+
     /**
      * 由于 整个系统返回的都是 200  基于异常进行判定请求是否正常
      */
@@ -149,4 +161,13 @@ public class SysOperationLogInterceptor implements HandlerInterceptor {
         return Objects.isNull(ex) ? "success" : "fail";
     }
 
+    private Integer getInvokeHierarchy(HttpServletRequest request) {
+        String value = request.getHeader(HttpHeaderConstant.INVOKE_HIERARCHY);
+        try {
+            return Integer.valueOf(value);
+        } catch (Exception e) {
+            log.error("调用层级解析异常", e);
+        }
+        return -1;
+    }
 }

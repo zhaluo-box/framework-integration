@@ -17,6 +17,8 @@ public interface SysOperationLogSaveService {
         // do nothing
     }
 
-    SysOperationLogDTO transformer(SysOperationLogOriginalDTO sysOperationLogOriginalDTO);
+    default SysOperationLogDTO transformer(SysOperationLogOriginalDTO sysOperationLogOriginalDTO) {
+        return null;
+    }
 
 }

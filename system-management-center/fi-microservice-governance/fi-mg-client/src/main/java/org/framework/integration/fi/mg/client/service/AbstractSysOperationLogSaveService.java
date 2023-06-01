@@ -90,7 +90,7 @@ public abstract class AbstractSysOperationLogSaveService implements SysOperation
 
         sysOperationLogDTO.setRequestHeaders(JSON.toJSONString(originalDTO.getOriginalRequestHeaders()))
                           .setRequestParam(JSON.toJSONString(originalDTO.getOriginalRequestParam()))
-                          .setResponseHeader(JSON.toJSONString(originalDTO.getOriginalResponseHeader()))
+                          .setResponseHeaders(JSON.toJSONString(originalDTO.getOriginalResponseHeader()))
                           .setResponseData(JSON.toJSONString(originalDTO.getOriginalResponseData(), simplePropertyPreFilter));
 
         return sysOperationLogDTO;

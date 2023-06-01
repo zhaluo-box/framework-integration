@@ -73,7 +73,7 @@ public class SysOperationLogOriginalDTO {
     /**
      * 调用层级
      */
-    private String invokeHierarchy;
+    private Integer invokeHierarchy;
 
     /**
      * 调用方式

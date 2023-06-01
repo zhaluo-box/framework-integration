@@ -15,6 +15,7 @@
         <module>fi-common-bom</module>
         <module>fi-openfeign-integration</module>
         <module>fi-swagger-integration</module>
+        <module>fi-mp-integration</module>
     </modules>
 
     <properties>
