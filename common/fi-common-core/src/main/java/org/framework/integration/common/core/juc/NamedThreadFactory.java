@@ -1,4 +1,4 @@
-package org.framework.integration.fi.mg.client.common;
+package org.framework.integration.common.core.juc;
 
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -8,13 +8,13 @@ import java.util.concurrent.atomic.AtomicInteger;
  *
  * @author zl
  */
-public class TraceThreadFactory implements ThreadFactory {
+public class NamedThreadFactory implements ThreadFactory {
 
     private final String namePrefix;
 
     private final AtomicInteger nextWorkerId = new AtomicInteger(1);
 
-    public TraceThreadFactory(String namePrefix) {
+    public NamedThreadFactory(String namePrefix) {
         this.namePrefix = namePrefix + "-worker-";
     }
 

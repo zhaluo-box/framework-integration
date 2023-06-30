@@ -1,0 +1,69 @@
+spring:
+  profiles:
+    active: dev
+  application:
+    name: fi-mg
+
+  cloud:
+    nacos:
+      config:
+        # 配置中心地址
+        server-addr: ${spring.cloud.nacos.discovery.server-addr}
+        namespace: fi-${spring.config.activate.on-profile}
+        # 配置文件格式
+        file-extension: yml
+        # 共享配置
+        shared-configs:
+          - application.${spring.cloud.nacos.config.file-extension}
+logging:
+  pattern:
+    console: '[%X{TRACE_ID}] %clr(%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD: %wEx}'
+    file: '[%X{TRACE_ID}] %clr(%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD: %wEx}'
+  file:
+    name: /home/logs/${spring.application.name}/${spring.application.name}.log
+
+
+server:
+  port: 11003
+
+---
+# Spring
+spring:
+  cloud:
+    nacos:
+      discovery:
+        # 服务注册地址
+        server-addr: 127.0.0.1:8848
+        namespace: fi-${spring.config.activate.on-profile}
+  config:
+    activate:
+      on-profile: dev
+
+---
+
+# Spring
+spring:
+  cloud:
+    nacos:
+      discovery:
+        # 服务注册地址
+        server-addr: 127.0.0.1:8848
+        namespace: fi-${spring.config.activate.on-profile}
+  config:
+    activate:
+      on-profile: test
+
+
+
+---
+# Spring
+spring:
+  cloud:
+    nacos:
+      discovery:
+        # 服务注册地址
+        server-addr: 127.0.0.1:8848
+        namespace: fi-${spring.config.activate.on-profile}
+  config:
+    activate:
+      on-profile: prod

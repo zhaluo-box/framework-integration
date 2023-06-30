@@ -6,13 +6,14 @@ import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.hutool.extra.servlet.ServletUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.framework.integration.fi.mg.client.common.HandlerMethodInfo;
-import org.framework.integration.fi.mg.client.config.properties.MGSysOperationLogConfigProperties;
 import org.framework.integration.fi.mg.client.config.support.LogApplicationContextHolder;
 import org.framework.integration.fi.mg.client.config.support.LogContextHolder;
 import org.framework.integration.fi.mg.client.config.web.filter.SysOperationLogFilter;
 import org.framework.integration.fi.mg.common.constants.HttpHeaderConstant;
 import org.framework.integration.fi.mg.common.dto.SysOperationLogOriginalDTO;
 import org.framework.integration.fi.mg.common.enums.InvokeWay;
+import org.framework.integration.fi.mg.common.properties.MGSysOperationLogConfigProperties;
+import org.framework.integration.fi.mg.common.service.AbstractSysOperationLogSaveService;
 import org.framework.integration.fi.mg.common.service.BusinessIdProvider;
 import org.framework.integration.fi.mg.common.service.SysOperatorProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,9 @@ public class SysOperationLogInterceptor implements HandlerInterceptor {
 
     @Autowired
     private List<SysOperationLogFilter> filters;
+
+    @Autowired
+    private AbstractSysOperationLogSaveService sysOperationLogSaveService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -129,8 +133,12 @@ public class SysOperationLogInterceptor implements HandlerInterceptor {
                   .setHttpCode(response.getStatus())
                   .setCostTime(DateUtil.between(logContext.getStartTime(), logContext.getEndTime(), DateUnit.MS, true));
 
-        // TODO @wmz 2023/5/29
         // 调用保存
+        if (mgSysOperationLogConfigProperties.isOpenAsync()) {
+            sysOperationLogSaveService.asyncHandleLog(logContext);
+        } else {
+            sysOperationLogSaveService.handleLog(logContext);
+        }
 
         LogContextHolder.remove();
     }

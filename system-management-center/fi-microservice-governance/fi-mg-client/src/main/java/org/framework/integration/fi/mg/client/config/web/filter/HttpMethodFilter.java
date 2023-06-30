@@ -1,7 +1,7 @@
 package org.framework.integration.fi.mg.client.config.web.filter;
 
 import org.framework.integration.fi.mg.client.common.HandlerMethodInfo;
-import org.framework.integration.fi.mg.client.config.properties.MGSysOperationLogConfigProperties;
+import org.framework.integration.fi.mg.common.properties.MGSysOperationLogConfigProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

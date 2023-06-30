@@ -1,12 +1,11 @@
-package org.framework.integration.fi.mg.client.service;
+package org.framework.integration.fi.mg.common.service;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.filter.SimplePropertyPreFilter;
-import org.framework.integration.fi.mg.client.common.TraceThreadFactory;
-import org.framework.integration.fi.mg.client.config.properties.MGSysOperationLogConfigProperties;
+import org.framework.integration.common.core.juc.NamedThreadFactory;
 import org.framework.integration.fi.mg.common.dto.SysOperationLogDTO;
 import org.framework.integration.fi.mg.common.dto.SysOperationLogOriginalDTO;
-import org.framework.integration.fi.mg.common.service.SysOperationLogSaveService;
+import org.framework.integration.fi.mg.common.properties.MGSysOperationLogConfigProperties;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -47,7 +46,7 @@ public abstract class AbstractSysOperationLogSaveService implements SysOperation
     /**
      * 异步处理
      */
-    protected void asyncHandleLog(SysOperationLogOriginalDTO originalDTO) {
+    public void asyncHandleLog(SysOperationLogOriginalDTO originalDTO) {
         executorService.execute(() -> {
             SysOperationLogDTO dto = transformer(originalDTO);
             saveBefore(dto);
@@ -58,7 +57,7 @@ public abstract class AbstractSysOperationLogSaveService implements SysOperation
     /**
      * 同步处理
      */
-    protected void handleLog(SysOperationLogOriginalDTO originalDTO) {
+    public void handleLog(SysOperationLogOriginalDTO originalDTO) {
         SysOperationLogDTO dto = transformer(originalDTO);
         saveBefore(dto);
         save(dto);
@@ -76,7 +75,7 @@ public abstract class AbstractSysOperationLogSaveService implements SysOperation
 
         // 拒绝策略  默认使用丢弃
         executorService = new ThreadPoolExecutor(coreSize, maxPoolSize, keepAliveTime, TimeUnit.SECONDS, new LinkedBlockingDeque<>(blockDequeSize),
-                                                 new TraceThreadFactory("so-log"), new ThreadPoolExecutor.DiscardPolicy());
+                                                 new NamedThreadFactory("so-log"), new ThreadPoolExecutor.DiscardPolicy());
 
     }
 

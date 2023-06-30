@@ -1,4 +1,4 @@
-package org.framework.integration.fi.mg.client.config.properties;
+package org.framework.integration.fi.mg.common.properties;
 
 import lombok.Data;
 import org.framework.integration.fi.mg.common.enums.BusinessType;

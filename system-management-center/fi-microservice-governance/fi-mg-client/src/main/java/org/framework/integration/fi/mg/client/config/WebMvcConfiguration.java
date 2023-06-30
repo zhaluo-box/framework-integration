@@ -2,9 +2,9 @@ package org.framework.integration.fi.mg.client.config;
 
 import org.framework.integration.fi.mg.client.bootstrap.OperationLogInitBootstrapService;
 import org.framework.integration.fi.mg.client.config.feign.SysOperationLogFeignInterceptor;
-import org.framework.integration.fi.mg.client.config.properties.MGSysOperationLogConfigProperties;
 import org.framework.integration.fi.mg.client.config.web.LogResponseDataAdvice;
 import org.framework.integration.fi.mg.client.config.web.SysOperationLogInterceptor;
+import org.framework.integration.fi.mg.common.properties.MGSysOperationLogConfigProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
