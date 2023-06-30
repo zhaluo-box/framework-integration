@@ -17,7 +17,7 @@ spring:
       config:
         # 配置中心地址
         server-addr: ${spring.cloud.nacos.discovery.server-addr}
-        namespace: fi-ruoyi-${spring.config.activate.on-profile}
+        namespace: fi-${spring.config.activate.on-profile}
         # 配置文件格式
         file-extension: yml
         # 共享配置
