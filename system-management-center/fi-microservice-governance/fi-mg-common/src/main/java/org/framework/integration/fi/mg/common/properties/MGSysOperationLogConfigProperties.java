@@ -2,8 +2,6 @@ package org.framework.integration.fi.mg.common.properties;
 
 import lombok.Data;
 import org.framework.integration.fi.mg.common.enums.BusinessType;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
 
 import java.util.*;
 
@@ -13,9 +11,11 @@ import java.util.*;
  * @author zl
  */
 @Data
-@Component
-@ConfigurationProperties(prefix = "mg.log")
+//@Component
+//@ConfigurationProperties(prefix = MGSysOperationLogConfigProperties.PREFIX_NAME)
 public class MGSysOperationLogConfigProperties {
+
+    public static final String PREFIX_NAME = "mg.log";
 
     /**
      * 默认等于false
@@ -47,7 +47,7 @@ public class MGSysOperationLogConfigProperties {
     /**
      * 是否开启异步配置
      */
-    private boolean openAsync;
+    private boolean openAsync = true;
 
     /**
      * 异步线程配置

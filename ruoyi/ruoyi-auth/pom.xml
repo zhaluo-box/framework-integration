@@ -60,6 +60,17 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.framework.integration</groupId>
+            <artifactId>fi-mg-client</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.framework.integration</groupId>
+            <artifactId>fi-mg-client-feign-adapter</artifactId>
+        </dependency>
+
+
     </dependencies>
 
     <build>

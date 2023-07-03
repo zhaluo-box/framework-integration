@@ -17,6 +17,7 @@ import org.framework.integration.fi.mg.common.service.AbstractSysOperationLogSav
 import org.framework.integration.fi.mg.common.service.BusinessIdProvider;
 import org.framework.integration.fi.mg.common.service.SysOperatorProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -35,8 +36,12 @@ import java.util.*;
  */
 @Slf4j
 @Component
+//@ConditionalOnBean(value = MGSysOperationLogConfigProperties.class)
 @ConditionalOnProperty(prefix = "mg.log", name = "enabled", havingValue = "true")
 public class SysOperationLogInterceptor implements HandlerInterceptor {
+
+    @Value("${spring.application.name}")
+    private String moduleName;
 
     @Autowired
     private BusinessIdProvider businessIdProvider;
@@ -91,7 +96,7 @@ public class SysOperationLogInterceptor implements HandlerInterceptor {
                       .setOperatorName(sysOperatorProvider.getOperatorName())
                       .setName(handleMethodInfo.getName())
                       .setHost(ServletUtil.getClientIP(request))
-                      .setModuleName(mgSysOperationLogConfigProperties.getModuleName())
+                      .setModuleName(getModuleName())
                       .setSystemName(mgSysOperationLogConfigProperties.getSystemName())
                       .setBusinessType(handleMethodInfo.getBusinessType())
                       .setGroupName(handleMethodInfo.getGroupName())
@@ -141,6 +146,11 @@ public class SysOperationLogInterceptor implements HandlerInterceptor {
         }
 
         LogContextHolder.remove();
+    }
+
+    private String getModuleName() {
+        var name = mgSysOperationLogConfigProperties.getModuleName();
+        return StringUtils.hasText(name) ? name : moduleName;
     }
 
     private String extractErrorMessage(Exception ex) {

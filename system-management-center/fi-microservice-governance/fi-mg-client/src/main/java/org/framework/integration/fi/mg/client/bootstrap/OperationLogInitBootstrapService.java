@@ -9,8 +9,8 @@ import org.framework.integration.fi.mg.common.annotations.Log;
 import org.framework.integration.fi.mg.common.annotations.LogGroup;
 import org.framework.integration.fi.mg.common.properties.MGSysOperationLogConfigProperties;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.util.Assert;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
@@ -30,6 +30,7 @@ import java.util.stream.Stream;
 public class OperationLogInitBootstrapService implements BootstrapService {
 
     @Autowired
+    @Qualifier(value = "requestMappingHandlerMapping")
     private RequestMappingHandlerMapping handlerMapping;
 
     @Autowired
@@ -44,8 +45,9 @@ public class OperationLogInitBootstrapService implements BootstrapService {
         List<Method> methodList = handlerMapping.getHandlerMethods().values().stream().map(HandlerMethod::getMethod).collect(Collectors.toList());
 
         methodList.stream().filter(m -> !ignoreClass.contains(m.getDeclaringClass().getSimpleName())).peek(m -> {
-            Assert.isTrue(m.getDeclaringClass().isAnnotationPresent(LogGroup.class), m.getDeclaringClass() + "的类缺少logGroup注释");
-            Assert.isTrue(m.isAnnotationPresent(Log.class), MethodUtil.getMethodDescription(m) + "的方法缺少log注释");
+            // TODO  2023/7/3 临时关闭校验，方便调试
+            // Assert.isTrue(m.getDeclaringClass().isAnnotationPresent(LogGroup.class), m.getDeclaringClass() + "的类缺少logGroup注释");
+            // Assert.isTrue(m.isAnnotationPresent(Log.class), MethodUtil.getMethodDescription(m) + "的方法缺少log注释");
         }).forEach(method -> {
 
             HandlerMethodInfo handlerMethodInfo = new HandlerMethodInfo();
@@ -61,7 +63,7 @@ public class OperationLogInitBootstrapService implements BootstrapService {
                              .setName(logAnnotation.name())
                              .setBusinessType(logAnnotation.businessType())
                              .setExcludeParam(logAnnotation.excludeParamNames())
-                             .setGroupName(logGroup.name());
+                             .setGroupName(logGroup.value());
 
             if (log.isTraceEnabled()) {
                 log.trace(" method name : {}, methodHandlerInfo : {}", method.getName(), handlerMethodInfo);

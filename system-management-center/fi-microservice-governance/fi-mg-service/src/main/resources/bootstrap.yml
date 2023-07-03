@@ -3,7 +3,6 @@ spring:
     active: dev
   application:
     name: fi-mg
-
   cloud:
     nacos:
       config:
@@ -26,6 +25,22 @@ logging:
 server:
   port: 11003
 
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true #驼峰自动映射
+    lazy-loading-enabled: true
+    multiple-result-sets-enabled: true
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl  # 日志控制级别
+  global-config:
+    banner: false
+    db-config:
+      logic-delete-value: 1 # 逻辑已删除值(默认为 1)
+      logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
+      id-type: assign_id
+      table-underline: true
+  mapper-locations: classpath*:/mapper/**/*.xml
+
 ---
 # Spring
 spring:
@@ -35,6 +50,9 @@ spring:
         # 服务注册地址
         server-addr: 127.0.0.1:8848
         namespace: fi-${spring.config.activate.on-profile}
+      config:
+        shared-configs:
+          - shared-pg-db-config.${spring.cloud.nacos.config.file-extension}
   config:
     activate:
       on-profile: dev

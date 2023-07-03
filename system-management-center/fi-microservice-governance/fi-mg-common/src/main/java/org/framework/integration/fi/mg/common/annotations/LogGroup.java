@@ -9,12 +9,12 @@ import java.lang.annotation.*;
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target(value = ElementType.ANNOTATION_TYPE)
+@Target(value = ElementType.TYPE)
 public @interface LogGroup {
 
     /**
      * @return 操作日志分组名称
      */
-    String name();
+    String value();
 
 }

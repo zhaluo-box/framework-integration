@@ -7,6 +7,8 @@ server:
   port: 39206
 
 spring:
+  main:
+    allow-circular-references: true
   application:
     # 应用名称
     name: ruoyi-system
@@ -34,8 +36,12 @@ spring:
       discovery:
         # 服务注册地址
         server-addr: 127.0.0.1:8848
-        namespace: fi-ruoyi-${spring.config.activate.on-profile}
+        namespace: fi-${spring.config.activate.on-profile}
 
   config:
     activate:
       on-profile: dev
+
+mg:
+  log:
+    enabled: true

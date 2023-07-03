@@ -1,12 +1,12 @@
 package org.framework.integration.fi.mg.client.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.framework.integration.fi.mg.client.bootstrap.OperationLogInitBootstrapService;
 import org.framework.integration.fi.mg.client.config.feign.SysOperationLogFeignInterceptor;
 import org.framework.integration.fi.mg.client.config.web.LogResponseDataAdvice;
 import org.framework.integration.fi.mg.client.config.web.SysOperationLogInterceptor;
 import org.framework.integration.fi.mg.common.properties.MGSysOperationLogConfigProperties;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,10 +24,15 @@ import java.util.Objects;
  *
  * @author zl
  */
+@Slf4j
 @Configuration
 @ConditionalOnProperty(prefix = "mg.log", name = "enabled", havingValue = "true")
-@ConditionalOnBean(value = MGSysOperationLogConfigProperties.class)
+//@ConditionalOnBean(value = MGSysOperationLogConfigProperties.class)
 public class WebMvcConfiguration implements WebMvcConfigurer {
+
+    static {
+        log.info("fi-mg-web-config init!");
+    }
 
     @Autowired
     private MGSysOperationLogConfigProperties mgSysOperationLogConfigProperties;
@@ -37,6 +42,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 
     @Bean
     public OperationLogInitBootstrapService operationLogAuditBootstrapService() {
+        log.info("方法初始化校验：开始");
         return new OperationLogInitBootstrapService();
     }
 
