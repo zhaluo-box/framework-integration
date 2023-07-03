@@ -111,7 +111,9 @@ public abstract class AbstractSysOperationLogSaveService implements SysOperation
 
         excludeProperties.addAll(global);
         excludeProperties.addAll(local);
-        excludeProperties.addAll(new ArrayList<>(Arrays.asList(excludeParamNames)));
+        if (excludeProperties.size() > 0) {
+            excludeProperties.addAll(new ArrayList<>(Arrays.asList(excludeParamNames)));
+        }
 
         return excludeProperties;
     }

@@ -52,15 +52,23 @@ public class OperationLogInitBootstrapService implements BootstrapService {
 
             HandlerMethodInfo handlerMethodInfo = new HandlerMethodInfo();
             Log logAnnotation = method.getAnnotation(Log.class);
+
+            // 如果没有注解就忽略
+            if (logAnnotation == null) {
+                return;
+            }
+
             if (logAnnotation.ignore()) {
                 return;
             }
+
             Class<?> targetClass = method.getDeclaringClass();
             LogGroup logGroup = targetClass.getDeclaredAnnotation(LogGroup.class);
             handlerMethodInfo.setHandlerMethod(method)
                              .setTargetClass(targetClass)
                              .setTargetClassName(targetClass.getName())
                              .setName(logAnnotation.name())
+                             .setMethodName(targetClass.getName() + "#" + method.getName())
                              .setBusinessType(logAnnotation.businessType())
                              .setExcludeParam(logAnnotation.excludeParamNames())
                              .setGroupName(logGroup.value());

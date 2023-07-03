@@ -37,12 +37,12 @@ public class MGSysOperationLogConfigProperties {
     /**
      * 全局配置
      */
-    private LogConfigProperties globalConfig;
+    private LogConfigProperties globalConfig = new LogConfigProperties();
 
     /**
      * 本地配置
      */
-    private LogConfigProperties localConfig;
+    private LogConfigProperties localConfig = new LogConfigProperties();
 
     /**
      * 是否开启异步配置

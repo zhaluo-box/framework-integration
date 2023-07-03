@@ -33,7 +33,7 @@ spring:
       discovery:
         # 服务注册地址
         server-addr: 127.0.0.1:8848
-        namespace: fi-ruoyi-${spring.config.activate.on-profile}
+        namespace: fi-${spring.config.activate.on-profile}
 
   config:
     activate:

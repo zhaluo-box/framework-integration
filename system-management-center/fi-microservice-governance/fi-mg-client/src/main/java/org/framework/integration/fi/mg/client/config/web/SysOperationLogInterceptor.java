@@ -179,13 +179,22 @@ public class SysOperationLogInterceptor implements HandlerInterceptor {
         return Objects.isNull(ex) ? "success" : "fail";
     }
 
+    /**
+     * 如果头信息中未携带，代表直接访问当前接口或者gateway 访问  当前接口层级理应为1
+     *
+     * @param request
+     * @return
+     */
     private Integer getInvokeHierarchy(HttpServletRequest request) {
         String value = request.getHeader(HttpHeaderConstant.INVOKE_HIERARCHY);
         try {
+            if (!StringUtils.hasText(value)) {
+                return 1;
+            }
             return Integer.valueOf(value);
         } catch (Exception e) {
             log.error("调用层级解析异常", e);
         }
-        return -1;
+        return 1;
     }
 }

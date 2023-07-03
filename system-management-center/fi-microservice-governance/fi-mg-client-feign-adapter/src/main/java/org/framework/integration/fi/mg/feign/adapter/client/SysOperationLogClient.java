@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
  * @author zl
  */
 // TODO  2023/6/30 contextId 支持SPEL 表达式 后期应修改
-@FeignClient(path = "sysOperationLog", value = SysOperationLogClient.CLIENT_NAME, contextId = "fi-mg", fallbackFactory = SysOperationLogFallbackFactory.class)
+@FeignClient(path = "sysOperationLog", contextId = SysOperationLogClient.CLIENT_NAME, value = "fi-mg", fallbackFactory = SysOperationLogFallbackFactory.class)
 public interface SysOperationLogClient {
 
     String CLIENT_NAME = "sysOperationLogClient";
