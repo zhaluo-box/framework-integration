@@ -1,0 +1,24 @@
+server:
+  port: 12009
+spring:
+  application:
+    name: fi-redis
+
+  redis:
+    host: localhost
+    password: 123456
+    database: 2
+    #  redis:
+    #    database: 2
+    #    host: localhost
+    #    password: 123456
+    #    port: 6379
+    #  redis:
+    #    # host: 192.168.8.17
+    #    host: 127.0.0.1
+    #    port: 6379
+    #    # password: Admin@redis123
+    #    # database: 6
+    #    password: 123456
+    #    database: 2
+

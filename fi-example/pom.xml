@@ -19,6 +19,7 @@
         <module>fi-example-feign</module>
         <module>fi-example-sleuth-monitor</module>
         <module>fi-example-web-mvc</module>
+        <module>fi-example-redis</module>
     </modules>
 
     <properties>
