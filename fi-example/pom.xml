@@ -20,6 +20,7 @@
         <module>fi-example-sleuth-monitor</module>
         <module>fi-example-web-mvc</module>
         <module>fi-example-redis</module>
+        <module>fi-example-spring-base</module>
     </modules>
 
     <properties>

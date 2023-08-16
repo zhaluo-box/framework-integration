@@ -1,0 +1,5 @@
+server:
+  port: 12007
+spring:
+  application:
+    name: fi-spring-base
