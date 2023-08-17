@@ -4,10 +4,14 @@ import org.framework.integration.example.spring.base.entity.Inventor;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
+import org.springframework.expression.spel.support.SimpleEvaluationContext;
+import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created  on 2023/8/16 16:16:34
@@ -21,7 +25,8 @@ public class SPELService {
 
         String message = simpleParse1();
         javaEntityParse();
-        myTest();
+//        myTest();
+        simpleEvaluationContext();
         return message;
     }
 
@@ -69,17 +74,41 @@ public class SPELService {
     public void myTest() {
 
         var map = new HashMap<String, Object>();
+
         map.put("1", 123);
         map.put("2", 123332);
         map.put("3", "xxxx");
         map.put("name", "name---");
 
+        var evaluationContext = new StandardEvaluationContext();
+
+        evaluationContext.setVariables(map);
+
         ExpressionParser parser = new SpelExpressionParser();
 
         var expression = parser.parseExpression("name");
-        var value = (String) expression.getValue(map);
+        var value = (String) expression.getValue(evaluationContext);
         System.out.println("value = " + value);
 
     }
 
+    public void simpleEvaluationContext() {
+        var simple = new Simple();
+        simple.booleanList.add(Boolean.TRUE);
+
+        var context = SimpleEvaluationContext.forReadOnlyDataBinding().build();
+
+        ExpressionParser parser = new SpelExpressionParser();
+        // set 具备修改 simple 的能力
+        parser.parseExpression("booleanList[0]").setValue(context, simple, "false");
+        var result = simple.booleanList.get(0);
+
+        System.out.println("simpleEvaluationContext: result = " + result);
+
+    }
+
+    static class Simple {
+
+        public List<Boolean> booleanList = new ArrayList<>();
+    }
 }
