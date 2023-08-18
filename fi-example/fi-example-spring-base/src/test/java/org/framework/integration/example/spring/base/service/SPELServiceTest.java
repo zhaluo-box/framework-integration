@@ -2,51 +2,23 @@ package org.framework.integration.example.spring.base.service;
 
 import lombok.Data;
 import org.framework.integration.example.spring.base.entity.Inventor;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.SpelCompilerMode;
 import org.springframework.expression.spel.SpelParserConfiguration;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.SimpleEvaluationContext;
-import org.springframework.expression.spel.support.StandardEvaluationContext;
-import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.List;
 
-/**
- * Created  on 2023/8/16 16:16:34
- *
- * @author zl
- */
-@Service
-public class SPELService {
+class SPELServiceTest {
 
-    public String simpleParse() {
-
-        String message = simpleParse1();
-        javaEntityParse();
-        //        myTest();
-        simpleEvaluationContext();
-        parserConfiguration();
-        compilerConfiguration();
-        return message;
-    }
-
-    private String simpleParse1() {
-        ExpressionParser parser = new SpelExpressionParser();
-        Expression exp = parser.parseExpression("'Hello World'.concat('!')");
-        Expression exp2 = parser.parseExpression("T(java.lang.Math).random() * 100.0");
-        String message = (String) exp.getValue();
-        System.out.println("exp2.getValue() = " + exp2.getValue());
-        System.out.println("message = " + message);
-        return message;
-    }
-
-    public void javaEntityParse() {
-
+    @Test
+    void javaEntityParse() {
         ExpressionParser parser = new SpelExpressionParser();
         Expression exp = parser.parseExpression("new String('hello world').toUpperCase()");
         String message = exp.getValue(String.class);
@@ -78,40 +50,16 @@ public class SPELService {
         System.out.println("result = " + result);
     }
 
-    public void myTest() {
-
-        var map = new HashMap<String, Object>();
-
-        map.put("1", 123);
-        map.put("2", 123332);
-        map.put("3", "xxxx");
-        map.put("name", "name---");
-
-        var evaluationContext = new StandardEvaluationContext();
-
-        evaluationContext.setVariables(map);
-
-        ExpressionParser parser = new SpelExpressionParser();
-
-        var expression = parser.parseExpression("name");
-        var value = (String) expression.getValue(evaluationContext);
-        System.out.println("value = " + value);
-
-    }
-
-    public void simpleEvaluationContext() {
-        var simple = new Simple();
+    @Test
+    void simpleEvaluationContext() {
+        var simple = new SPELService.Simple();
         simple.booleanList.add(Boolean.TRUE);
-
         var context = SimpleEvaluationContext.forReadOnlyDataBinding().build();
-
         ExpressionParser parser = new SpelExpressionParser();
         // set 具备修改 simple 的能力
         parser.parseExpression("booleanList[0]").setValue(context, simple, "false");
         var result = simple.booleanList.get(0);
-
         System.out.println("simpleEvaluationContext: result = " + result);
-
     }
 
     /**
@@ -119,19 +67,21 @@ public class SPELService {
      *
      * @see <a href='https://docs.spring.io/spring-framework/docs/5.2.25.RELEASE/spring-framework-reference/core.html#expressions-parser-configuration'>4.1.2. Parser Configuration</>
      */
-    public void parserConfiguration() {
+    @Test
+    void parserConfiguration() {
         // Turn on:
         // - auto null reference initialization
         // - auto collection growing
         SpelParserConfiguration config = new SpelParserConfiguration(true, true);
         ExpressionParser parser = new SpelExpressionParser(config);
         Expression expression = parser.parseExpression("list[3]");
-        Demo demo = new Demo();
+        SPELService.Demo demo = new SPELService.Demo();
         Object o = expression.getValue(demo);
         System.out.println("parserConfiguration: o = " + o);
     }
 
-    public void compilerConfiguration() {
+    @Test
+    void compilerConfiguration() {
         SpelParserConfiguration config = new SpelParserConfiguration(SpelCompilerMode.IMMEDIATE, this.getClass().getClassLoader());
         SpelExpressionParser parser = new SpelExpressionParser(config);
         Expression expr = parser.parseExpression("payload");
@@ -140,16 +90,51 @@ public class SPELService {
         System.out.println("compilerConfiguration: payload = " + payload);
     }
 
+    /**
+     * 数字支持使用负号、指数表示法和小数点。默认情况下，使用Double.parseDouble（）解析实数
+     */
+    @Test
+    @DisplayName("字面意义的表达式测试")
+    void literalExpressionsTest() {
+        ExpressionParser parser = new SpelExpressionParser();
+
+        // evals to "Hello World"
+        String helloWorld = (String) parser.parseExpression("'Hello World'").getValue();
+
+        System.out.println("helloWorld = " + helloWorld);
+
+        //6.0221415E+23是科学计数法，表示6.0221415乘以10的23次方，即：
+        //6.0221415×10^23 =6.0221415e+23
+        double avogadrosNumber = (Double) parser.parseExpression("-6.0221415E+23").getValue();
+
+        //avogadrosNumber = -6.0221415E23  好像还是科学计数法，没有转换为数字
+        System.out.println("avogadrosNumber = " + avogadrosNumber);
+
+        // evals to 2147483647
+        // 十六进制数 转为 十进制数
+        int maxValue = (Integer) parser.parseExpression("0x7FFFFFFF").getValue();
+        // maxValue = 2147483647
+        System.out.println("maxValue = " + maxValue);
+
+        boolean trueValue = (Boolean) parser.parseExpression("true").getValue();
+        System.out.println("trueValue = " + trueValue);
+
+        Object nullValue = parser.parseExpression("null").getValue();
+        System.out.println("nullValue = " + nullValue);
+    }
+
+    @Data
     static class Simple {
         public List<Boolean> booleanList = new ArrayList<>();
     }
 
+    @Data
     static class Demo {
         public List<String> list;
     }
 
     @Data
-    private class MyMessage {
+    static class MyMessage {
 
         private String payload = "12344";
     }

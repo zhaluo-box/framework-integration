@@ -50,6 +50,7 @@
 
         <hutool.version>5.8.18</hutool.version>
 
+
     </properties>
 
 
@@ -144,6 +145,9 @@
                 <!-- 注意这里是import -->
                 <scope>import</scope>
             </dependency>
+
+
+
 
 
         </dependencies>
