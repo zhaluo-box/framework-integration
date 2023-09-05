@@ -1,9 +1,9 @@
 package org.framework.integration.example.spring.base.service;
 
 import lombok.Data;
-import org.framework.integration.example.spring.base.entity.Inventor;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.SpelCompilerMode;
@@ -11,9 +11,7 @@ import org.springframework.expression.spel.SpelParserConfiguration;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.SimpleEvaluationContext;
 
-import java.util.ArrayList;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.*;
 
 class SPELServiceTest {
 
@@ -123,6 +121,33 @@ class SPELServiceTest {
         System.out.println("nullValue = " + nullValue);
     }
 
+    public void test() {
+//        int year = (Integer) parser.parseExpression("Birthdate.Year + 1900").getValue(context);
+//
+//        String city = (String) parser.parseExpression("placeOfBirth.City").getValue(context);
+
+
+        ExpressionParser parser = new SpelExpressionParser();
+        EvaluationContext context = SimpleEvaluationContext.forReadOnlyDataBinding().build();
+
+        // Inventions Array
+//
+//        // evaluates to "Induction motor"
+//        String invention = parser.parseExpression("inventions[3]").getValue(
+//                        context, tesla, String.class);
+//
+//        // Members List
+//
+//        // evaluates to "Nikola Tesla"
+//        String name = parser.parseExpression("Members[0].Name").getValue(
+//                        context, ieee, String.class);
+//
+//        // List and Array navigation
+//        // evaluates to "Wireless communication"
+//        String invention = parser.parseExpression("Members[0].Inventions[6]").getValue(
+//                        context, ieee, String.class);
+    }
+
     @Data
     static class Simple {
         public List<Boolean> booleanList = new ArrayList<>();
@@ -137,5 +162,143 @@ class SPELServiceTest {
     static class MyMessage {
 
         private String payload = "12344";
+    }
+
+    static class Inventor {
+
+        private String name;
+
+        private String nationality;
+
+        private String[] inventions;
+
+        private Date birthdate;
+
+        private PlaceOfBirth placeOfBirth;
+
+        public Inventor(String name, String nationality) {
+            GregorianCalendar c = new GregorianCalendar();
+            this.name = name;
+            this.nationality = nationality;
+            this.birthdate = c.getTime();
+        }
+
+        public Inventor(String name, Date birthdate, String nationality) {
+            this.name = name;
+            this.nationality = nationality;
+            this.birthdate = birthdate;
+        }
+
+        public Inventor() {
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getNationality() {
+            return nationality;
+        }
+
+        public void setNationality(String nationality) {
+            this.nationality = nationality;
+        }
+
+        public Date getBirthdate() {
+            return birthdate;
+        }
+
+        public void setBirthdate(Date birthdate) {
+            this.birthdate = birthdate;
+        }
+
+        public PlaceOfBirth getPlaceOfBirth() {
+            return placeOfBirth;
+        }
+
+        public void setPlaceOfBirth(PlaceOfBirth placeOfBirth) {
+            this.placeOfBirth = placeOfBirth;
+        }
+
+        public void setInventions(String[] inventions) {
+            this.inventions = inventions;
+        }
+
+        public String[] getInventions() {
+            return inventions;
+        }
+    }
+
+    static class Society {
+
+        private String name;
+
+        public static String Advisors = "advisors";
+
+        public static String President = "president";
+
+        private List<Inventor> members = new ArrayList<Inventor>();
+
+        private Map officers = new HashMap();
+
+        public List getMembers() {
+            return members;
+        }
+
+        public Map getOfficers() {
+            return officers;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public boolean isMember(String name) {
+            for (Inventor inventor : members) {
+                if (inventor.getName().equals(name)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
+   static class PlaceOfBirth {
+
+        private String city;
+        private String country;
+
+        public PlaceOfBirth(String city) {
+            this.city=city;
+        }
+
+        public PlaceOfBirth(String city, String country) {
+            this(city);
+            this.country = country;
+        }
+
+        public String getCity() {
+            return city;
+        }
+
+        public void setCity(String s) {
+            this.city = s;
+        }
+
+        public String getCountry() {
+            return country;
+        }
+
+        public void setCountry(String country) {
+            this.country = country;
+        }
     }
 }
