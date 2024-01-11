@@ -1,9 +1,9 @@
 package org.framework.integration.example.web.mvc;
 
 import org.framework.integration.example.web.mvc.utils.MessageUtil;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.MessageSource;
 import org.springframework.scheduling.annotation.EnableAsync;
 
@@ -13,7 +13,8 @@ import org.springframework.scheduling.annotation.EnableAsync;
  * @author zl
  */
 @EnableAsync
-@SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
+@SpringBootApplication
+@MapperScan("org.framework.integration.example.web.mvc.mapper")
 public class FIWebMvcApplication {
 
     public FIWebMvcApplication(MessageSource messageSource) {

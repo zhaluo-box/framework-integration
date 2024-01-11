@@ -35,7 +35,7 @@ public class AMQPConfig {
 
     /**
      * 支持路由的连接工厂
-     * {@link <a href="https://docs.spring.io/spring-amqp/docs/current/reference/html/#routing-connection-factory">路由连接工厂</href>}
+     *  <a href="https://docs.spring.io/spring-amqp/docs/current/reference/html/#routing-connection-factory">路由连接工厂</href>
      */
     // @Bean
     public ConnectionFactory routeConnectionFactory() {

@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
+import java.util.Objects;
+
 /**
  * Created  on 2023/5/23 16:16:07
  *
@@ -27,8 +29,10 @@ public class LogResponseDataAdvice implements ResponseBodyAdvice {
     public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class selectedConverterType,
                                   ServerHttpRequest request, ServerHttpResponse response) {
 
-        System.out.println(body);
-        LogContextHolder.setData("body", body);
+        //        System.out.println(body);
+        if (Objects.nonNull(body)) {
+            LogContextHolder.setData("body", body);
+        }
         return body;
     }
 }

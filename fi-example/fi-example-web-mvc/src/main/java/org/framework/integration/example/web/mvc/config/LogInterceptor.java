@@ -25,37 +25,37 @@ public class LogInterceptor implements AsyncHandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
-        log.info("请求头 :  {}", request.getHeaderNames().nextElement());
-        log.info("请求参数 :  {}", request.getParameterMap());
+        log.trace("请求头 :  {}", request.getHeaderNames().nextElement());
+        log.trace("请求参数 :  {}", request.getParameterMap());
 
         LogContextHolder.setData("header", request.getHeaderNames().nextElement());
         LogContextHolder.setData("params", request.getParameterMap());
-        log.info("preHandle-log-context : {}", LogContextHolder.getLocalMap());
+        log.trace("preHandle-log-context : {}", LogContextHolder.getLocalMap());
 
         return AsyncHandlerInterceptor.super.preHandle(request, response, handler);
     }
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        log.info("后置处理");
-        log.info("postHandle : {}", LogContextHolder.getLocalMap());
+        log.trace("后置处理");
+        log.trace("postHandle : {}", LogContextHolder.getLocalMap());
         AsyncHandlerInterceptor.super.postHandle(request, response, handler, modelAndView);
     }
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        log.info("同步线程完成");
-        log.info("afterCompletion : {}", LogContextHolder.getLocalMap());
+        log.trace("同步线程完成");
+        log.trace("afterCompletion : {}", LogContextHolder.getLocalMap());
         System.out.println("afterConcurrentHandlingStarted remove start!");
         LogContextHolder.remove();
         System.out.println("afterConcurrentHandlingStarted remove end!");
-        log.info("afterCompletion 2 : {}", LogContextHolder.getLocalMap());
+        log.trace("afterCompletion 2 : {}", LogContextHolder.getLocalMap());
         AsyncHandlerInterceptor.super.afterCompletion(request, response, handler, ex);
     }
 
     @Override
     public void afterConcurrentHandlingStarted(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        log.info("afterConcurrentHandlingStarted : {}", LogContextHolder.getLocalMap());
+        log.trace("afterConcurrentHandlingStarted : {}", LogContextHolder.getLocalMap());
         System.out.println("afterConcurrentHandlingStarted remove start!");
         LogContextHolder.remove();
         System.out.println("afterConcurrentHandlingStarted remove end!");

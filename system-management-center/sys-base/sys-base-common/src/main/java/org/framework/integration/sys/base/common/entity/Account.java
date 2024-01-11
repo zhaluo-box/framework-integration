@@ -17,4 +17,19 @@ import lombok.experimental.Accessors;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Account {
 
+    /**
+     * ID
+     */
+    private String id;
+
+    /**
+     * 昵称
+     */
+    private String nickname;
+
+    /**
+     * 登录账号
+     */
+    private String loginAccount;
+
 }

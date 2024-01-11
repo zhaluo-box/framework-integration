@@ -8,3 +8,26 @@ spring:
     basename: i18n/message
     fallback-to-system-locale: true
     encoding: utf-8
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/boot-mybatis-plus?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=false
+    username: root
+    password: root
+
+mybatis-plus:
+  type-aliases-package: org.framework.integration.example.web.mvc.common
+  configuration:
+    map-underscore-to-camel-case: true
+    lazy-loading-enabled: true
+    multiple-result-sets-enabled: true
+    log-impl: org.apache.ibatis.logging.log4j2.Log4j2Impl
+  global-config:
+    banner: false
+    db-config:
+      id-type: assign_id
+      table-underline: true
+  mapper-locations: classpath*:/mapper/**/*.xml
+logging:
+  level:
+    root: info
+    org.framework.integration.example.web.mvc.mapper: debug
