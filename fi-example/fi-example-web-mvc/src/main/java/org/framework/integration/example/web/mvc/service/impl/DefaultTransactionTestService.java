@@ -138,6 +138,7 @@ public class DefaultTransactionTestService extends ServiceImpl<UserMapper, User>
             var newUser = new User();
             System.out.println("finally ---------------");
             newUser.setName("finally" + System.currentTimeMillis());
+            
             //            save(newUser);
             transactionTestHelper.propagationRequireNew(newUser);
         }
